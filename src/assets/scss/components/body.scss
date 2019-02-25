@@ -1,6 +1,43 @@
 .body {
   padding: 60px 0 100px;
-  position: relative;
-  background: url($image-path + 'backgrounds/landing-page.png') top;
-  background-size: cover;
+
+  &__title {
+    font-size: 36px;
+    color: #ffffff;
+    font-weight: 400;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -35px;
+      left: 0;
+      background-color: $blue-light;
+      width: 70px;
+      height: 3px;
+      border-radius: 5px;
+    }
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: $purple-soft;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__content {
+    &:first-child {
+      width: 40%;
+    }
+
+    &:last-child {
+      width: 46%;
+    }
+  }
 }

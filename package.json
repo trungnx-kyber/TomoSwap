@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bignumber.js": "^8.1.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
@@ -10,7 +11,8 @@
     "react-simple-dropdown": "^3.2.3",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
-    "redux-saga": "^0.16.2"
+    "redux-saga": "^0.16.2",
+    "web3": "^1.0.0-beta.46"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,12 +1,9 @@
 .header {
   width: 100%;
   padding: 10px 0;
-  position: fixed;
-  top: 0;
   z-index: 1;
 
   &__container {
-    padding: 0 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;

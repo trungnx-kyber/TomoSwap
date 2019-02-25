@@ -7,7 +7,7 @@ import './../../assets/scss/index.scss';
 export default class App extends Component {
   render() {
     return (
-      <div>
+      <div className={"app-container"}>
         <Header/>
         <Body/>
         <Footer/>
