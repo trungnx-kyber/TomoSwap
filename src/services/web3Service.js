@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { NETWORK_PROXY_ADDRESS, NETWORK_PROXY_ABI, TOKEN_ABI, RPC_ENDPOINT, WALLET_ID } from "../config/env";
+import EnvConfig from "../config/env";
 
 export function trade(srcTokenAddress, srcAmount, destTokenAddress, destAddress, maxDestAmount, minConversionRate) {
   const networkProxyContract = getNetworkProxyContract();
@@ -11,7 +11,7 @@ export function trade(srcTokenAddress, srcAmount, destTokenAddress, destAddress,
     destAddress,
     maxDestAmount,
     minConversionRate,
-    WALLET_ID
+    EnvConfig.WALLET_ID
   ).call();
 }
 
@@ -24,13 +24,13 @@ export function transfer(srcTokenAddress, destAddress, srcAmount) {
 export function approve(srcTokenAddress, srcAmount) {
   const tokenContract = getTokenContract(srcTokenAddress);
 
-  return tokenContract.methods.approve(NETWORK_PROXY_ADDRESS, srcAmount).call();
+  return tokenContract.methods.approve(EnvConfig.NETWORK_PROXY_ADDRESS, srcAmount).call();
 }
 
-export function getExpectedRate(srcAddress, destAddress, srcQty) {
+export function getRate(srcTokenAddress, destTokenAddress, srcTokenQty) {
   const networkProxyContract = getNetworkProxyContract();
 
-  return networkProxyContract.methods.getExpectedRate(srcAddress, destAddress, srcQty).call().then((result) => {
+  return networkProxyContract.methods.getExpectedRate(srcTokenAddress, destTokenAddress, srcTokenQty).call().then((result) => {
     let expectedRate = result.expectedRate;
     let slippageRate = result.slippageRate;
 
@@ -45,17 +45,17 @@ export function getTokenBalance(tokenAddress, address) {
 }
 
 function getWeb3Instance() {
-  return new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT));
+  return new Web3(new Web3.providers.HttpProvider(EnvConfig.RPC_ENDPOINT));
 }
 
 function getNetworkProxyContract() {
   const web3 = getWeb3Instance();
 
-  return web3.eth.Contract(NETWORK_PROXY_ABI, NETWORK_PROXY_ADDRESS);
+  return web3.eth.Contract(EnvConfig.NETWORK_PROXY_ABI, EnvConfig.NETWORK_PROXY_ADDRESS);
 }
 
 function getTokenContract(srcTokenAddress) {
   const web3 = getWeb3Instance();
 
-  return web3.eth.Contract(TOKEN_ABI, srcTokenAddress);
+  return web3.eth.Contract(EnvConfig.TOKEN_ABI, srcTokenAddress);
 }

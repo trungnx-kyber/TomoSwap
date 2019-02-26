@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TokenSelector from '../commons/TokenSelector';
 import { formatAmount } from "../../utils/helpers";
-import { EXPLORER_URL } from '../../config/env';
+import EnvConfig from '../../config/env';
 import Dropdown, { DropdownTrigger, DropdownContent } from "react-simple-dropdown";
 
 export default class SwapView extends Component {
@@ -12,7 +12,7 @@ export default class SwapView extends Component {
     const isButtonHidden = this.props.tx.isConfirming || this.props.tx.isBroadcasting || this.props.tx.id || this.props.tx.error;
 
     return (
-      <div className={"swap container"}>
+      <div className={"swap"}>
         <div className={"swap__container"}>
           <div className={"swap__content"}>
             <div className={"swap__content-title"}>From:</div>
@@ -62,7 +62,7 @@ export default class SwapView extends Component {
                 tokens={this.props.tokens}
               />
               <div className={"swap__content-input"}>
-                {this.props.sourceAmount ? this.props.isTokenPairRateLoading ? 'Loading...' : formatAmount(this.props.destAmount, this.props.destToken.precision) : 0}
+                {this.props.sourceAmount ? this.props.isTokenPairRateLoading ? 'Loading...' : formatAmount(this.props.destAmount) : 0}
               </div>
             </div>
             <div className={"swap__content-info"}>
@@ -86,7 +86,7 @@ export default class SwapView extends Component {
         )}
 
         {this.props.tx.id && (
-          <div className={"swap__text common__fade-in"}>Successfully! The <a rel="noopener noreferrer" href={`${EXPLORER_URL}${this.props.tx.id}`} target="_blank">transaction</a> is accepted</div>
+          <div className={"swap__text common__fade-in"}>Successfully! The <a rel="noopener noreferrer" href={`${EnvConfig.EXPLORER_URL}${this.props.tx.id}`} target="_blank">transaction</a> is accepted</div>
         )}
 
         {!isButtonHidden && (

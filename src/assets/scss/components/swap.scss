@@ -1,22 +1,16 @@
 .swap {
-  width: 100%;
-  height: 500px;
-  border-radius: 10px;
-  box-shadow: 0 42px 154px 0 rgba(1, 1, 1, 0.16);
-  background-image: linear-gradient(to bottom, #43508e, #313b6e);
-  padding: 50px 55px 65px;
-
   &__container {
-    margin-bottom: 45px;
+    margin-bottom: 30px;
   }
 
   &__content {
+    padding: 0 50px;
     width: 100%;
 
     &-title {
       font-size: 16px;
-      font-weight: 600;
-      color: #5584f9;
+      font-weight: 500;
+      color: $blue-light;
       padding-left: 10px;
       margin-bottom: 13px;
     }
@@ -26,17 +20,13 @@
       justify-content: space-between;
       align-items: center;
       border-radius: 30px;
+      border: 2px solid transparent;
       background-color: #29315b;
       padding: 14px 25px;
       transition: all .3s;
 
       &--error {
         border-color: $red;
-        background-color: $red-light;
-
-        .swap__content-input {
-          background-color: $red-light;
-        }
       }
 
       &--imported {
@@ -62,7 +52,6 @@
       font-weight: 500;
       color: $grey;
       background-color: #29315b;
-      transition: all .3s;
 
       &::placeholder {
         opacity: .6;
@@ -149,10 +138,6 @@
 
   &__bot {
     text-align: center;
-
-    &-button {
-      margin-bottom: 20px;
-    }
 
     &-term {
       font-size: 12px;

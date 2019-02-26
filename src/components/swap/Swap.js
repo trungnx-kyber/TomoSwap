@@ -3,7 +3,6 @@ import SwapView from './SwapView';
 import { connect } from 'react-redux';
 import * as swapActions from "../../actions/swapAction";
 import { filterInputNumber } from "../../utils/validators";
-import { getExpectedRate } from '../../services/web3Service';
 
 function mapStateToProps(store) {
   const token = store.token;
@@ -49,7 +48,6 @@ class Swap extends Component {
 
   componentDidMount = () => {
     this.props.fetchTokenPairRate();
-    const data = getExpectedRate("0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "0x06cca536f531ac3426077ca39b629d901c5cf272", 1);
   };
 
   handleClickSwapButton = () => {
@@ -77,7 +75,7 @@ class Swap extends Component {
 
   addSrcAmountByBalancePercentage = (balancePercentage) => {
     const srcTokenBalance = this.props.sourceToken.balance;
-    const sourceAmountByPercentage = (srcTokenBalance * (balancePercentage / 100)).toFixed(this.props.sourceToken.precision);
+    const sourceAmountByPercentage = (srcTokenBalance * (balancePercentage / 100)).toFixed(this.props.sourceToken.decimals);
 
     this.props.setSourceAmount(sourceAmountByPercentage);
     this.handleCloseSwapBalanceBox();

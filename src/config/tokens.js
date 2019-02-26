@@ -9,13 +9,6 @@ export const TOMO_TOKEN = {
 export const TOKENS = [
   TOMO_TOKEN,
   {
-    "symbol": "ETH",
-    "name": "Ethereum",
-    "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "decimals": 18,
-    "logo": "tomo.svg"
-  },
-  {
     "symbol": "CTC",
     "name": "ChainTEX Coin",
     "address": "0x06cca536f531ac3426077ca39b629d901c5cf272",
