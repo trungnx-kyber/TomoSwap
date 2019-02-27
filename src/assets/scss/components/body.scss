@@ -83,6 +83,10 @@
       &:active::before {
         transform: scale(0.8);
       }
+
+      &--transfer:active::before {
+        transform: scale(0.8) translateX(137px);
+      }
     }
 
     &-button {

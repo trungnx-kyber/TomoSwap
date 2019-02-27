@@ -1,8 +1,8 @@
 import { swapActionTypes } from '../actions/swapAction';
-import { TOMO_TOKEN, TOKENS } from '../config/tokens';
+import { TOMO, TOKENS } from '../config/tokens';
 
 const initialState = {
-  sourceToken: TOMO_TOKEN,
+  sourceToken: TOMO,
   destToken: TOKENS[1],
   sourceAmount: '',
   destAmount: 0,

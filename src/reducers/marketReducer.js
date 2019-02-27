@@ -1,10 +1,10 @@
 import { marketActionTypes } from '../actions/marketAction';
-import { TOMO_TOKEN } from "../config/tokens";
+import { TOMO } from "../config/tokens";
 
 const initialState = {
   isLoading: true,
   isBackgroundLoading: false,
-  indexToken: TOMO_TOKEN,
+  indexToken: TOMO,
 };
 
 export default function marketReducer(state = initialState, action) {

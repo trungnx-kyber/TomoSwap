@@ -1,4 +1,4 @@
-export const TOMO_TOKEN = {
+export const TOMO = {
   "symbol": "TOMO",
   "name": "TomoChain",
   "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -7,7 +7,7 @@ export const TOMO_TOKEN = {
 };
 
 export const TOKENS = [
-  TOMO_TOKEN,
+  TOMO,
   {
     "symbol": "CTC",
     "name": "ChainTEX Coin",

@@ -25,7 +25,7 @@ export default class TokenSelector extends Component {
   };
 
   handleOnClickToken = (token) => {
-    this.props.onSelectedToken(token);
+    this.props.onSelectToken(token);
     this.handleCloseDropDown();
   };
 

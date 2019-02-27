@@ -1,0 +1,11 @@
+.exchange {
+  &__container {
+    margin-bottom: 30px;
+  }
+
+  &__button {
+    &-container {
+      text-align: center;
+    }
+  }
+}
