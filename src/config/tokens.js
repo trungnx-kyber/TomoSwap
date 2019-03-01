@@ -1,9 +1,15 @@
 export const TOMO = {
+  "id": 'tomochain',
   "symbol": "TOMO",
   "name": "TomoChain",
   "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
   "decimals": 18,
   "logo": "tomo.svg",
+};
+
+export const USD = {
+  "symbol": "USD",
+  "name": "USD",
 };
 
 export const TOKENS = [

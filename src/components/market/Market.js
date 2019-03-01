@@ -30,6 +30,10 @@ class Market extends Component {
     }
   }
 
+  componentDidMount = () => {
+    this.props.fetchMarketRates();
+  };
+
   handleOnTypingSearch = (e) => {
     const value = e.target.value.toUpperCase();
     this.setState({ searchText: value });
@@ -44,7 +48,7 @@ class Market extends Component {
         indexToken={this.props.indexToken}
         isLoading={this.props.isLoading}
         isBackgroundLoading={this.props.isBackgroundLoading}
-        onClickBasedToken={this.props.setIndexToken}
+        setIndexToken={this.props.setIndexToken}
         onTypingSearch={this.handleOnTypingSearch}
       />
     )

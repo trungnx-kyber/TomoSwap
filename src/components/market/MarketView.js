@@ -1,28 +1,33 @@
 import React, { Component } from 'react';
 import { formatAmount } from "../../utils/helpers";
+import { TOMO, USD } from '../../config/tokens';
 
 export default class MarketView extends Component {
   render() {
     const getTokenList = () => {
-      return this.props.tokens.filter((token) => {
-        return token.symbol.includes(this.props.searchText) && (token.symbol !== this.props.indexToken.symbol);
-      }).map((token, index) =>
-        <tr key={index} className={"common__fade-in"}>
-          <td className={"common__flexbox none"}>
-            <img className={"market__table-icon"} src={require(`../../assets/images/tokens/${token.logo}`)} alt=""/>
-            <div className={"market__table-text"}>{token.symbol}</div>
-          </td>
-          <td className={"market__table-text"}>
-            {token.sellRate ? formatAmount(token.sellRate) : 0}
-          </td>
-          <td className={"market__table-text"}>
-            {token.buyRate ? formatAmount(token.buyRate) : 0}
-          </td>
-          <td>
-            <span className={"market__table-change none"}>---</span>
-          </td>
-        </tr>
-      );
+      return this.props.tokens.map((token, index) => {
+        if (!token.symbol.includes(this.props.searchText) || (token.symbol === TOMO.symbol)) {
+          return null;
+        }
+
+        const isUSDMarket = this.props.indexToken.symbol === USD.symbol;
+        const sellRate = isUSDMarket ? `${formatAmount(token.usdSellRate)} ${USD.symbol}` : `${formatAmount(token.sellRate)} ${TOMO.symbol}`;
+        const buyRate = isUSDMarket ? `${formatAmount(token.usdBuyRate)} ${USD.symbol}` : `${formatAmount(token.buyRate)} ${TOMO.symbol}`;
+
+        return (
+          <tr key={index} className={"common__fade-in"}>
+            <td className={"common__flexbox none"}>
+              <img className={"market__table-icon"} src={require(`../../assets/images/tokens/${token.logo}`)} alt=""/>
+              <div className={"market__table-text"}>{token.symbol}</div>
+            </td>
+            <td className={"market__table-text"}>{sellRate}</td>
+            <td className={"market__table-text"}>{buyRate}</td>
+            <td>
+              <span className={"market__table-change none"}>---</span>
+            </td>
+          </tr>
+        )
+      });
     };
 
     return (
@@ -46,10 +51,10 @@ export default class MarketView extends Component {
                   return (
                     <div
                       key={index}
-                      className={`market__table-option ${this.props.indexToken.symbol === basedToken ? 'active' : 'disabled'}`}
-                      // onClick={() => this.props.onClickBasedToken(basedToken)}
+                      className={`market__table-option ${this.props.indexToken.symbol === basedToken.symbol ? 'active' : ''}`}
+                      onClick={() => this.props.setIndexToken(basedToken)}
                     >
-                      {basedToken}
+                      {basedToken.symbol}
                     </div>
                   )
                 })}

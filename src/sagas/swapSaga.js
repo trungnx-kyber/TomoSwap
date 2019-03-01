@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { getRate } from "../services/web3Service";
 import * as swapActions from "../actions/swapAction";
-import { formatNumberByDecimals } from "../utils/helpers";
+import { formatBigNumber } from "../utils/helpers";
 
 const getSwapState = state => state.swap;
 
@@ -23,7 +23,7 @@ function *fetchTokenPairRate() {
       yield put(swapActions.setError(`Your source amount exceeds our max capacity`));
     }
 
-    expectedRate = formatNumberByDecimals(expectedRate, destToken.decimals);
+    expectedRate = formatBigNumber(expectedRate);
     const destAmount = expectedRate * sourceAmount;
 
     yield put(swapActions.setDestAmount(destAmount));

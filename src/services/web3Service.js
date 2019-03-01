@@ -38,6 +38,18 @@ export function getRate(srcTokenAddress, destTokenAddress, srcTokenQty) {
   });
 }
 
+export async function getAllRates(srcAddresses, destAddresses, srcAmounts) {
+  let rates = [];
+
+  for (let i = 0; i < srcAddresses.length; i++) {
+    const { expectedRate } = await getRate(srcAddresses[i], destAddresses[i], srcAmounts[i]);
+
+    rates.push(expectedRate);
+  }
+
+  return rates;
+}
+
 export function getTokenBalance(tokenAddress, address) {
   const tokenContract = getNetworkProxyContract();
 
