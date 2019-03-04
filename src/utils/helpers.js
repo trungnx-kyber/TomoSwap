@@ -19,3 +19,9 @@ export function formatBigNumber(number, precision) {
 
   return result.toNumber();
 }
+
+export function numberToHex(number, decimals = 18) {
+  let bigNumber = new BigNumber(number).times(Math.pow(10, decimals));
+
+  return "0x" + bigNumber.toString(16);
+}

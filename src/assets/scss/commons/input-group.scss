@@ -46,6 +46,7 @@
     font-weight: 500;
     color: $grey;
     background-color: #29315b;
+    transition: padding .3s;
 
     &::placeholder {
       opacity: .6;
@@ -84,11 +85,18 @@
         }
       }
     }
+
+    .dropdown__trigger {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   &__info {
     height: 22px;
-    margin-top: 15px;
     font-size: 14px;
     font-weight: 500;
     color: #8690ad;
@@ -96,6 +104,7 @@
     position: relative;
     display: flex;
     align-items: flex-start;
+    margin: 10px 0 15px;
 
     .common__flexbox {
       height: 100%;

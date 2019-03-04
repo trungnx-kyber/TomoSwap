@@ -6,18 +6,21 @@ import Transfer from '../transfer/Transfer';
 import ImportAccount from '../account/ImportAccount';
 import * as globalActions from "../../actions/globalAction";
 import AppConfig from "../../config/app";
+import Modal from "../../components/commons/Modal";
 
 function mapStateToProps(store) {
   const global = store.global;
 
   return {
     exchangeMode: global.exchangeMode,
+    globalError: global.error,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setExchangeMode: (exchangeMode) => {dispatch(globalActions.setExchangeMode(exchangeMode))},
+    resetGlobalError: () => {dispatch(globalActions.setGlobalError())},
   }
 }
 
@@ -53,6 +56,15 @@ class Body extends Component {
           </div>
           <Market/>
         </div>
+        <Modal isActive={!!this.props.globalError} handleClose={() => this.props.resetGlobalError()}>
+          <div className={"modal__header modal__header--error"}>Error!</div>
+          <div className={"modal__body"}>
+            <div className={"modal__body-top"}>{this.props.globalError}</div>
+          </div>
+          <div className={"modal__footer common__flexbox common__flexbox--center"}>
+            <div className={"modal__button modal__button--gradient"} onClick={() => this.props.resetGlobalError()}>Try Again</div>
+          </div>
+        </Modal>
       </div>
     )
   }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MarketView from './MarketView';
 import { connect } from "react-redux";
-import AppConfig from "../../config/app";
+import appConfig from "../../config/app";
 import { fetchMarketRates, setIndexToken } from "../../actions/marketAction";
 
 function mapStateToProps(store) {
@@ -26,7 +26,7 @@ class Market extends Component {
 
     this.state = {
       searchText: '',
-      basedTokens: AppConfig.MARKET_BASED_TOKENS
+      basedTokens: appConfig.MARKET_BASED_TOKENS
     }
   }
 

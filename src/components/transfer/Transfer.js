@@ -14,7 +14,7 @@ function mapStateToProps(store) {
     sourceAmount: transfer.sourceAmount,
     toAddress: transfer.toAddress,
     error: transfer.error,
-    isAccountImported: !!account.account,
+    isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
     isConfirmLoading: account.isConfirmLoading,
   };

@@ -3,10 +3,10 @@ export const globalActionTypes = {
   SET_EXCHANGE_MODE: 'GLOBAL.SET_EXCHANGE_MODE',
 };
 
-export function setGlobalError(isErrorActive, errorMessage = '', errorType = '') {
+export function setGlobalError(error = null) {
   return {
     type: globalActionTypes.SET_GLOBAL_ERROR,
-    payload: { isErrorActive, errorMessage, errorType }
+    payload: error
   }
 }
 

@@ -14,7 +14,11 @@
     justify-content: space-between;
     align-items: center;
 
-    &.none {
+    &--center {
+      justify-content: center;
+    }
+
+    &--left {
       justify-content: initial;
     }
   }

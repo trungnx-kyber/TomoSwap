@@ -14,42 +14,31 @@
   &--active {
     visibility: visible;
     opacity: 1;
+
+    .modal {
+      pointer-events: visible;
+
+      &__content {
+        transform: scale(1);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: visible;
+      }
+    }
   }
 }
 
 .modal {
   width: 90%;
-  max-width: 560px;
+  max-width: 440px;
   max-height: 70%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
   position: absolute;
   z-index: 1000;
   pointer-events: none;
-
-  &__header {
-    font-size: 18px;
-    font-weight: 500;
-    color: #adb9c9;
-    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.34);
-    background: #2f3640 linear-gradient(to bottom, #48505a, #2f3640);
-    padding: 23px 30px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    position: relative;
-  }
-
-  &__close-btn {
-    width: 16px;
-    height: 15px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 30px;
-    background-image: url($image-path + 'icons/close.svg');
-    cursor: pointer;
-  }
 
   &__content {
     margin: 10px 0 50px;
@@ -59,53 +48,103 @@
     pointer-events: none;
     transform: scale(0.7);
     border-radius: 10px;
-    box-shadow: 0 12px 64px 0 rgba(19, 23, 32, 0.81);
+    box-shadow: 0 22px 44px 0 rgba(0, 0, 0, 0.4);
     transition: all .3s;
   }
 
-  &--active {
-    pointer-events: visible;
-
-    .modal__content {
-      transform: scale(1);
-      opacity: 1;
-      visibility: visible;
-      pointer-events: visible;
-    }
-  }
-}
-
-.error-modal {
-  padding: 30px 25px 40px;
-
-  &__message {
+  &__header {
+    padding: 20px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
     font-weight: 600;
     color: #4a5675;
-    text-align: center;
-    line-height: 1.5;
+    text-transform: uppercase;
 
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      background-image: url($image-path + 'icons/error.svg');
-      position: relative;
-      top: 3px;
-      margin-right: 7px;
+    &--error,
+    &--broadcasted,
+    &--success {
+      text-transform: initial;
+
+      &::before {
+        content: '';
+        width: 40px;
+        height: 40px;
+        display: block;
+        margin-right: 10px;
+        background-size: contain;
+      }
+    }
+
+    &--error {
+      color: $red;
+
+      &::before {
+        background-image: url($image-path + 'icons/circle-error.svg');
+      }
+    }
+
+    &--broadcasted::before {
+      background-image: url($image-path + 'icons/circle-broadcasted.svg');
+    }
+
+    &--success::before {
+      background-image: url($image-path + 'icons/circle-success.svg');
     }
   }
 
-  &__container {
-    font-weight: 500;
+  &__body {
     font-size: 14px;
+    font-weight: 500;
+    line-height: 1.7;
+    text-align: center;
+    color: #727b8f;
+
+    &-top {
+      padding: 25px;
+      background-color: #f5f5f5;
+    }
+
+    &-bot {
+      padding: 20px;
+    }
   }
 
-  &__content {
-    margin: 35px 0 40px;
+  &__footer {
+    padding: 25px 30px;
+    box-shadow: 0 -6px 12px 0 rgba(0, 0, 0, 0.03);
   }
 
   &__button {
-    padding: 8px 37px;
+    padding: 13px 20px;
+    width: 100%;
+    max-width: 150px;
+    border-radius: 27px;
+    border: solid 1px #dedede;
+    font-size: 14px;
+    font-weight: 500;
+    color: #80849c;
+    cursor: pointer;
+    transition: all .3s;
+
+    &--gradient {
+      color: white;
+      background: linear-gradient(to bottom, #36cef9, #279df4) 0 100%;
+      background-size: auto 150%;
+
+      &:hover {
+        background-position: 0 0;
+      }
+    }
+
+    &:hover {
+      color: white;
+      background-color: $blue-light;
+    }
+
+    &:active {
+      transform: translateY(2px);
+    }
   }
 }

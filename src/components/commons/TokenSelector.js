@@ -31,16 +31,20 @@ export default class TokenSelector extends Component {
 
   render() {
     const getTokenList = () => {
-      return this.props.tokens.filter((token) => {
-        return token.symbol.includes(this.state.searchText);
-      }).map((token, index) =>
-        <div className={"token-selector__item"} key={index} onClick={() => this.handleOnClickToken(token)}>
-          <div className={"token-selector__item-symbol"}>{token.symbol}</div>
-          {(this.props.showBalance && token.balance >= 0) && (
-            <div className={"token-selector__item-balance"}>{token.balance} {token.symbol}</div>
-          )}
-        </div>
-      );
+      return this.props.tokens.map((token, index) => {
+        if (!token.symbol.includes(this.state.searchText)) {
+          return null
+        }
+
+        return (
+          <div className={"token-selector__item"} key={index} onClick={() => this.handleOnClickToken(token)}>
+            <div className={"token-selector__item-symbol"}>{token.symbol}</div>
+            {(this.props.showBalance && token.balance >= 0) && (
+              <div className={"token-selector__item-balance"}>{token.balance} {token.symbol}</div>
+            )}
+          </div>
+        )
+      });
     };
 
     return (

@@ -18,7 +18,7 @@ function mapStateToProps(store) {
     tokenPairRate: swap.tokenPairRate,
     isTokenPairRateLoading: swap.isTokenPairRateLoading,
     error: swap.error,
-    isAccountImported: !!account.account,
+    isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
   };
 }

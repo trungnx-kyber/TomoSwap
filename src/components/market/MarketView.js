@@ -16,14 +16,14 @@ export default class MarketView extends Component {
 
         return (
           <tr key={index} className={"common__fade-in"}>
-            <td className={"common__flexbox none"}>
+            <td className={"common__flexbox common__flexbox--left"}>
               <img className={"market__table-icon"} src={require(`../../assets/images/tokens/${token.logo}`)} alt=""/>
               <div className={"market__table-text"}>{token.symbol}</div>
             </td>
             <td className={"market__table-text"}>{sellRate}</td>
             <td className={"market__table-text"}>{buyRate}</td>
             <td>
-              <span className={"market__table-change none"}>---</span>
+              <span className={"market__table-change market__table-change--none"}>---</span>
             </td>
           </tr>
         )

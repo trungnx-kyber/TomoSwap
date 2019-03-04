@@ -24,6 +24,7 @@ export default class TransferView extends Component {
             <div className={`input-group__wrapper`}>
               <input className={"input-group__input input-group__input--full"} type="text"/>
             </div>
+            <div className={"input-group__info"}/>
           </div>
         </div>
 

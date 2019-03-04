@@ -1,5 +1,5 @@
 const EnvConfig = {
-  CHAIN_ID: 89,
+  NETWORK_ID: 89,
   RPC_ENDPOINT: 'https://testnet.tomochain.com',
   WEBSOCKET_ENDPOINT: 'wss://testnet.tomochain.com/ws',
   EXPLORER_URL: 'https://scan.testnet.tomochain.com/',
