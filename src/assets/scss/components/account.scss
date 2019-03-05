@@ -71,6 +71,12 @@
         }
       }
     }
+
+    &--inactive {
+      opacity: .5;
+      cursor: initial;
+      pointer-events: none;
+    }
   }
 
   &__name {
