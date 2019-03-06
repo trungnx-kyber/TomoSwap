@@ -1,6 +1,8 @@
+import { delay } from 'redux-saga';
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { getSwapABI, getRate } from "../services/networkService";
 import * as swapActions from "../actions/swapAction";
+import * as txActions from "../actions/transactionAction";
 import { calculateMinConversionRate, formatBigNumber, getBiggestNumber, numberToHex } from "../utils/helpers";
 import appConfig from "../config/app";
 import envConfig from "../config/env";
@@ -44,12 +46,13 @@ function *swapToken() {
     };
 
     const txHash = yield call(sendTx, account.walletType, txObject);
+    let isTxMined = false;
+    yield put(txActions.setTxHash(txHash));
 
-    let isTxMined = true;
-
-    while(isTxMined) {
+    while(!isTxMined) {
       isTxMined = yield call(trackTx, txHash);
-      // alert(isTxMined);
+      yield put(txActions.setIsTxMined(!!isTxMined));
+      yield call(delay, 1000);
     }
   } catch (error) {
     console.log(error.message);

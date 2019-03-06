@@ -76,7 +76,7 @@
         transition: all .2s ease-out;
       }
 
-      &--transfer::before {
+      &--Transfer::before {
         transform: translateX($button-width);
       }
 

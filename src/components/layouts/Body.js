@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Market from '../market/Market';
 import Swap from '../swap/Swap';
 import Transfer from '../transfer/Transfer';
+import Transaction from '../transaction/Transaction';
 import ImportAccount from '../account/ImportAccount';
 import * as globalActions from "../../actions/globalAction";
 import AppConfig from "../../config/app";
@@ -51,6 +52,7 @@ class Body extends Component {
                   <Transfer/>
                 )}
                 <ImportAccount/>
+                <Transaction/>
               </div>
             </div>
           </div>

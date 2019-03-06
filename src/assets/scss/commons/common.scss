@@ -107,6 +107,24 @@
     background-size: contain;
   }
 
+  &__loading-circle {
+    width: 24px;
+    height: 24px;
+    background-image: url($image-path + 'icons/loading-circle.gif');
+    background-size: contain;
+    margin-right: 7px;
+    position: relative;
+    bottom: 2px;
+  }
+
+  &__copy-icon {
+    width: 13px;
+    height: 16px;
+    background-image: url($image-path + 'icons/copy.svg');
+    background-size: contain;
+    cursor: pointer;
+  }
+
   &__fade-in {
     opacity: 0;
     transform: translateY(10px);

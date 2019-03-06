@@ -5,6 +5,7 @@ import marketReducer from "./marketReducer";
 import swapReducer from "./swapReducer";
 import globalReducer from "./globalReducer";
 import transferReducer from "./transferReducer";
+import transactionReducer from "./transactionReducer";
 
 const reducer = combineReducers({
   global: globalReducer,
@@ -13,6 +14,7 @@ const reducer = combineReducers({
   market: marketReducer,
   swap: swapReducer,
   transfer: transferReducer,
+  tx: transactionReducer
 });
 
 export default reducer
