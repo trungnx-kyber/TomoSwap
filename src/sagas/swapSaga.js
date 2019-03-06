@@ -44,8 +44,13 @@ function *swapToken() {
     };
 
     const txHash = yield call(sendTx, account.walletType, txObject);
-    const isTxMined = yield call(trackTx, txHash);
-    console.log(isTxMined);
+
+    let isTxMined = true;
+
+    while(isTxMined) {
+      isTxMined = yield call(trackTx, txHash);
+      // alert(isTxMined);
+    }
   } catch (error) {
     console.log(error.message);
   }

@@ -21,7 +21,7 @@ function *fetchBalance(address) {
   const balances = yield call(getTokenBalances, tokens, address);
 
   tokens.forEach((token, index) => {
-    token.balance = balances[index] ? formatBigNumber(balances[index]) : 0;
+    token.balance = balances[index] ? formatBigNumber(balances[index], token.decimals) : 0;
   });
 
   yield put(setTokens(tokens));

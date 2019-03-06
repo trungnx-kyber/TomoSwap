@@ -8,14 +8,10 @@ export function formatAmount(number, precision = 6) {
   return parseFloat(amountString.slice(0, (amountString.indexOf('.')) + (precision + 1)));
 }
 
-export function formatBigNumber(number, precision) {
+export function formatBigNumber(number, decimals = 18) {
   let result = new BigNumber(number.toString());
 
-  result = result.div(Math.pow(10, 18));
-
-  if (precision) {
-    result = formatAmount(result, precision);
-  }
+  result = result.div(Math.pow(10, decimals));
 
   return result.toNumber();
 }
