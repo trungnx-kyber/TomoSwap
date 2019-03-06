@@ -2,8 +2,8 @@ import { accountActionTypes } from '../actions/accountAction';
 
 const initialState = {
   address: null,
+  walletType: null,
   isBalanceLoading: false,
-  isAccountLoading: false,
 };
 
 export default function accountReducer(state = initialState, action) {
@@ -14,17 +14,9 @@ export default function accountReducer(state = initialState, action) {
         isBalanceLoading: action.payload
       }
     }
-    case accountActionTypes.SET_ADDRESS: {
-      return {
-        ...state,
-        address: action.payload
-      }
-    }
-    case accountActionTypes.SET_ACCOUNT_LOADING: {
-      return {
-        ...state,
-        isAccountLoading: action.payload
-      }
+    case accountActionTypes.SET_WALLET: {
+      const { address, walletType } = action.payload;
+      return {...state, address, walletType}
     }
     default:
       return state;

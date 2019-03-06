@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TokenSelector from '../commons/TokenSelector';
 import Dropdown, { DropdownTrigger, DropdownContent } from "react-simple-dropdown";
 import { filterInputNumber } from "../../utils/validators";
+import { formatAmount } from "../../utils/helpers";
 
 export default class InputGroup extends Component {
   constructor(props) {
@@ -75,7 +76,7 @@ export default class InputGroup extends Component {
         <div className={"input-group__info"}>
           {this.props.isAccountImported && (
             <div className={"common__flexbox"}>
-              Balance: {this.props.isBalanceLoading ? <div className={"input-group__loading common__loading"}/> : this.props.sourceToken.balance} {this.props.sourceToken.symbol}
+              Balance: {this.props.isBalanceLoading ? <div className={"input-group__loading common__loading"}/> : formatAmount(this.props.sourceToken.balance)} {this.props.sourceToken.symbol}
             </div>
           )}
         </div>

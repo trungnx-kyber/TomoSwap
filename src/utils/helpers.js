@@ -25,3 +25,17 @@ export function numberToHex(number, decimals = 18) {
 
   return "0x" + bigNumber.toString(16);
 }
+
+export function getBiggestNumber() {
+  const initNumber = new BigNumber(2);
+  return "0x" + (initNumber.pow(255).toString(16));
+}
+
+export function calculateMinConversionRate(slippageRate, expectedRate) {
+  if (!expectedRate) {
+    return 0;
+  }
+  const minConversionRate = (new BigNumber(slippageRate) * new BigNumber(expectedRate)) / 100;
+
+  return numberToHex(minConversionRate);
+}

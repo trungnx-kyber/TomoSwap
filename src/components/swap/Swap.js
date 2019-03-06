@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SwapView from './SwapView';
 import { connect } from 'react-redux';
 import * as swapActions from "../../actions/swapAction";
+import { setGlobalError } from "../../actions/globalAction";
 
 function mapStateToProps(store) {
   const token = store.token;
@@ -30,7 +31,8 @@ function mapDispatchToProps(dispatch) {
     setSourceAmount: (amount) => {dispatch(swapActions.setSourceAmount(amount))},
     fetchTokenPairRate: () => {dispatch(swapActions.fetchTokenPairRate())},
     swapToken: () => {dispatch(swapActions.swapToken())},
-    setError: (message) => {dispatch(swapActions.setError(message))},
+    setError: (error) => {dispatch(swapActions.setError(error))},
+    setGlobalError: (error) => {dispatch(setGlobalError(error))},
   }
 }
 
@@ -42,7 +44,15 @@ class Swap extends Component {
   swap = () => {
     if (!this.props.sourceAmount) {
       this.props.setError("Source amount is required to make a swap");
+      return;
     }
+
+    if (!this.props.isAccountImported) {
+      this.props.setGlobalError("Please connect your wallet by choosing one of our supported methods.");
+      return;
+    }
+
+    this.props.swapToken();
   };
 
   render() {

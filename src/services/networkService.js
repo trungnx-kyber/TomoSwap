@@ -1,34 +1,34 @@
-import Web3 from 'web3';
 import envConfig from "../config/env";
 import { numberToHex } from "../utils/helpers";
+import * as Web3Service from "./web3Service";
 
-export function trade(srcTokenAddress, srcTokenAmount, destTokenAddress, destAddress, maxDestAmount, minConversionRate) {
-  const networkProxyContract = getNetworkProxyContract();
+export function getSwapABI(data) {
+  const networkProxyContract = Web3Service.getNetworkProxyContract();
 
-  return networkProxyContract.methods.trade(
-    srcTokenAddress,
-    srcTokenAmount,
-    destTokenAddress,
-    destAddress,
-    maxDestAmount,
-    minConversionRate,
-    envConfig.WALLET_ID
-  ).call();
+  return networkProxyContract.methods.swap(
+    data.srcAddress,
+    data.srcAmount,
+    data.destAddress,
+    data.address,
+    data.maxDestAmount,
+    data.minConversionRate,
+    data.walletId
+  ).encodeABI();
 }
 
 export function transfer(srcTokenAddress, destAddress, srcAmount) {
-  const tokenContract = getTokenContract(srcTokenAddress);
+  const tokenContract = Web3Service.getTokenContract(srcTokenAddress);
 
   return tokenContract.methods.transfer(destAddress, srcAmount).call();
 }
 
 export function approve(srcTokenAddress, srcAmount) {
-  const tokenContract = getTokenContract(srcTokenAddress);
+  const tokenContract = Web3Service.getTokenContract(srcTokenAddress);
   return tokenContract.methods.approve(envConfig.NETWORK_PROXY_ADDRESS, srcAmount).call();
 }
 
 export function getRate(srcAddress, srcDecimals, destAddress, srcAmount) {
-  const networkProxyContract = getNetworkProxyContract();
+  const networkProxyContract = Web3Service.getNetworkProxyContract();
 
   srcAmount = numberToHex(srcAmount, srcDecimals);
 
@@ -53,33 +53,13 @@ export async function getAllRates(srcAddresses, srcDecimals, destAddresses, srcA
 }
 
 export async function getTokenBalances(tokens, address) {
-  const tokenContract = getNetworkProxyContract();
+  const tokenContract = Web3Service.getNetworkProxyContract();
   let balances = [];
 
   for (let i = 0; i < tokens.length; i++) {
-    const balance = await getTokenBalance(tokenContract, tokens[i].address, address);
+    const balance = await tokenContract.methods.getBalance(tokens[i].address, address).call();
     balances.push(balance);
   }
 
   return balances;
-}
-
-function getTokenBalance(tokenContract, tokenAddress, address) {
-  return tokenContract.methods.getBalance(tokenAddress, address).call();
-}
-
-function getWeb3Instance() {
-  return new Web3(new Web3.providers.HttpProvider(envConfig.RPC_ENDPOINT));
-}
-
-function getNetworkProxyContract() {
-  const web3 = getWeb3Instance();
-
-  return web3.eth.Contract(envConfig.NETWORK_PROXY_ABI, envConfig.NETWORK_PROXY_ADDRESS);
-}
-
-function getTokenContract(srcTokenAddress) {
-  const web3 = getWeb3Instance();
-
-  return web3.eth.Contract(envConfig.TOKEN_ABI, srcTokenAddress);
 }
