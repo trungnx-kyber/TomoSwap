@@ -8,6 +8,7 @@ const initialState = {
   destAmount: 0,
   tokenPairRate: 0,
   isTokenPairRateLoading: true,
+  isDestAmountLoadingShown: true,
   error: null
 };
 
@@ -48,6 +49,12 @@ export default function swapReducer(state = initialState, action) {
       return {
         ...state,
         isTokenPairRateLoading: action.payload
+      }
+    }
+    case swapActionTypes.SET_IS_DEST_AMOUNT_LOADING_SHOWN: {
+      return {
+        ...state,
+        isDestAmountLoadingShown: action.payload
       }
     }
     case swapActionTypes.SET_ERROR: {

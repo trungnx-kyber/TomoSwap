@@ -18,6 +18,7 @@ function mapStateToProps(store) {
     destAmount: swap.destAmount,
     tokenPairRate: swap.tokenPairRate,
     isTokenPairRateLoading: swap.isTokenPairRateLoading,
+    isDestAmountLoadingShown: swap.isDestAmountLoadingShown,
     error: swap.error,
     isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
@@ -71,6 +72,7 @@ class Swap extends Component {
         error={this.props.error}
         isAccountImported={this.props.isAccountImported}
         isTokenPairRateLoading={this.props.isTokenPairRateLoading}
+        isDestAmountLoadingShown={this.props.isDestAmountLoadingShown}
         isBalanceLoading={this.props.isBalanceLoading}
       />
     )

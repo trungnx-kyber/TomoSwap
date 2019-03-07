@@ -8,6 +8,7 @@ import appConfig from "../config/app";
 import envConfig from "../config/env";
 import { sendTx, trackTx } from "../services/accountService";
 import { TOMO } from "../config/tokens";
+import AppConfig from "../config/app";
 import { getWeb3Instance } from "../services/web3Service";
 
 const getSwapState = state => state.swap;
@@ -59,7 +60,15 @@ function *swapToken() {
   }
 }
 
-function *fetchTokenPairRate() {
+function *fetchTokenPairRateWithInterval() {
+  yield call(fetchTokenPairRate);
+  while(true) {
+    yield call(delay, AppConfig.TOKEN_PAIR_RATE_INTERVAL);
+    yield call(fetchTokenPairRate, false);
+  }
+}
+
+function *fetchTokenPairRate(showDestAmountLoading = false) {
   const swap = yield select(getSwapState);
   const account = yield select(getAccountState);
   const srcToken = swap.sourceToken;
@@ -70,6 +79,7 @@ function *fetchTokenPairRate() {
   if (!isValidInput) return;
 
   yield put(swapActions.setTokenPairRateLoading(true));
+  yield put(swapActions.setIsDestAmountLoadingShown(showDestAmountLoading));
 
   try {
     let { expectedRate } = yield call(getRate, srcToken.address, srcToken.decimals, destToken.address, sourceAmount);
@@ -88,6 +98,9 @@ function *fetchTokenPairRate() {
   }
 
   yield put(swapActions.setTokenPairRateLoading(false));
+  if (showDestAmountLoading) {
+    yield put(swapActions.setIsDestAmountLoadingShown(false));
+  }
 }
 
 function *validateValidInput(swap, account) {
@@ -130,7 +143,7 @@ function *setError(errorMessage) {
 }
 
 export default function* swapWatcher() {
-  yield takeLatest([swapActions.swapActionTypes.FETCH_TOKEN_PAIR_RATE], fetchTokenPairRate);
+  yield takeLatest(swapActions.swapActionTypes.FETCH_TOKEN_PAIR_RATE, fetchTokenPairRateWithInterval);
   yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_TOKEN, fetchTokenPairRate);
   yield takeLatest(swapActions.swapActionTypes.SET_DEST_TOKEN, fetchTokenPairRate);
   yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_AMOUNT, fetchTokenPairRate);

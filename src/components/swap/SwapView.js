@@ -30,7 +30,7 @@ export default class SwapView extends Component {
                 tokens={this.props.tokens}
               />
               <div className={"input-group__input"}>
-                {this.props.sourceAmount ? this.props.isTokenPairRateLoading ? 'Loading...' : formatAmount(this.props.destAmount) : 0}
+                {this.props.sourceAmount ? this.props.isDestAmountLoadingShown ? 'Loading...' : formatAmount(this.props.destAmount) : 0}
               </div>
             </div>
 

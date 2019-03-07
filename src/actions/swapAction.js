@@ -1,6 +1,7 @@
 export const swapActionTypes = {
   FETCH_TOKEN_PAIR_RATE: 'SWAP.FETCH_TOKEN_PAIR_RATE',
   SET_TOKEN_PAIR_RATE_LOADING: 'SWAP.SET_TOKEN_PAIR_RATE_LOADING',
+  SET_IS_DEST_AMOUNT_LOADING_SHOWN: 'SWAP.SET_IS_DEST_AMOUNT_LOADING_SHOWN',
   SET_TOKEN_PAIR_RATE: 'SWAP.SET_TOKEN_PAIR_RATE',
   SWAP_TOKEN: 'SWAP.SWAP_TOKEN',
   SET_SOURCE_TOKEN: 'SWAP.SET_SOURCE_TOKEN',
@@ -60,6 +61,13 @@ export function setTokenPairRate(rate) {
 export function setTokenPairRateLoading(isLoading) {
   return {
     type: swapActionTypes.SET_TOKEN_PAIR_RATE_LOADING,
+    payload: isLoading
+  }
+}
+
+export function setIsDestAmountLoadingShown(isLoading) {
+  return {
+    type: swapActionTypes.SET_IS_DEST_AMOUNT_LOADING_SHOWN,
     payload: isLoading
   }
 }
