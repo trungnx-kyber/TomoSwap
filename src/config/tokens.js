@@ -15,8 +15,8 @@ export const USD = {
 export const TOKENS = [
   TOMO,
   {
-    "symbol": "CTC",
-    "name": "ChainTEX Coin",
+    "symbol": "CTT",
+    "name": "ChainTEX Token",
     "address": "0x06cca536f531ac3426077ca39b629d901c5cf272",
     "liquidityConversionRate": "0xb791bfb3c161ff3018e3633a749ca09b1c3c55b9",
     "reserveAMM": "0x30b17b7e0ef60e0344961de1b87ec1620145c4e1",

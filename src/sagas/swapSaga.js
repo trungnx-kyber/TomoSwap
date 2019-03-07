@@ -47,13 +47,20 @@ function *swapToken() {
     };
 
     const txHash = yield call(sendTx, account.walletType, txObject);
-    let isTxMined = false;
     yield put(txActions.setTxHash(txHash));
+    let isTxMined = false;
 
     while(!isTxMined) {
-      isTxMined = yield call(trackTx, txHash);
-      yield put(txActions.setIsTxMined(!!isTxMined));
-      yield call(delay, 1000);
+      yield call(delay, appConfig.TX_TRACKING_INTERVAL);
+      const txReceipt = yield call(trackTx, txHash);
+
+      if (txReceipt.status === '0x1') {
+        yield put(txActions.setIsTxMined(txReceipt.status));
+        isTxMined = true;
+      } else if (txReceipt.status === '0x0') {
+        yield put(txActions.setTxError("There is something wrong with the transaction!"));
+        isTxMined = true;
+      }
     }
   } catch (error) {
     console.log(error.message);

@@ -3,6 +3,7 @@ import { txActionTypes } from '../actions/transactionAction';
 const initialState = {
   txHash: null,
   isTxMined: false,
+  error: null
 };
 
 export default function transactionReducer(state = initialState, action) {
@@ -17,6 +18,12 @@ export default function transactionReducer(state = initialState, action) {
       return {
         ...state,
         isTxMined: action.payload
+      }
+    }
+    case txActionTypes.SET_ERROR: {
+      return {
+        ...state,
+        error: action.payload
       }
     }
     default:

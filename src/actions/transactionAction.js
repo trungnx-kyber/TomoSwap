@@ -1,6 +1,7 @@
 export const txActionTypes = {
   SET_TX_HASH: 'TX.SET_TX_HASH',
   SET_IS_TX_MINED: 'TX.SET_IS_TX_MINED',
+  SET_ERROR: 'TX.SET_ERROR',
 };
 
 export function setTxHash(hash = null) {
@@ -14,5 +15,12 @@ export function setIsTxMined(isTxMined) {
   return {
     type: txActionTypes.SET_IS_TX_MINED,
     payload: isTxMined
+  }
+}
+
+export function setTxError(error = null) {
+  return {
+    type: txActionTypes.SET_ERROR,
+    payload: error
   }
 }

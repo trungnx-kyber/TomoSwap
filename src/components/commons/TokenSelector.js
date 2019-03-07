@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Dropdown, { DropdownTrigger, DropdownContent } from "react-simple-dropdown";
-import {formatAmount} from "../../utils/helpers";
+import { formatAmount } from "../../utils/helpers";
 
 export default class TokenSelector extends Component {
   constructor(props) {

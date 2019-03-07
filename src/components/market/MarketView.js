@@ -33,7 +33,7 @@ export default class MarketView extends Component {
     return (
       <div className={"market"}>
         <div className={"market__header common__flexbox"}>
-          <div className={"market__header-title"}>{this.props.indexToken.name} Market</div>
+          <div className={"market__header-title"}>{this.props.indexToken.symbol} Market</div>
           <div className={"market__header-input"}>
             <input type="text" placeholder="Search" value={this.props.searchText} onChange={(e) => this.props.onTypingSearch(e)}/>
           </div>
