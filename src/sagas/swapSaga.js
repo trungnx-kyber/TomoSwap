@@ -3,12 +3,16 @@ import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { getSwapABI, getRate } from "../services/networkService";
 import * as swapActions from "../actions/swapAction";
 import * as txActions from "../actions/transactionAction";
-import { calculateMinConversionRate, formatBigNumber, getBiggestNumber, numberToHex } from "../utils/helpers";
+import {
+  calculateMinConversionRate,
+  formatBigNumber,
+  getBiggestNumber,
+  numberToHex
+} from "../utils/helpers";
 import appConfig from "../config/app";
 import envConfig from "../config/env";
 import { sendTx, trackTx } from "../services/accountService";
 import { TOMO } from "../config/tokens";
-import AppConfig from "../config/app";
 import { getWeb3Instance } from "../services/web3Service";
 
 const getSwapState = state => state.swap;
@@ -40,10 +44,10 @@ function *swapToken() {
       from: account.address,
       to: envConfig.NETWORK_PROXY_ADDRESS,
       value: srcToken.symbol === TOMO.symbol ? srcAmount : '0x0',
-      // gas: appConfig.DEFAULT_GAS,
+      gas: appConfig.DEFAULT_GAS,
       gasPrice: gasPrice,
+      data: swapABI,
       // nonce: nonce,
-      data: swapABI
     };
 
     const txHash = yield call(sendTx, account.walletType, txObject);
@@ -70,7 +74,7 @@ function *swapToken() {
 function *fetchTokenPairRateWithInterval() {
   yield call(fetchTokenPairRate);
   while(true) {
-    yield call(delay, AppConfig.TOKEN_PAIR_RATE_INTERVAL);
+    yield call(delay, appConfig.TOKEN_PAIR_RATE_INTERVAL);
     yield call(fetchTokenPairRate, false);
   }
 }

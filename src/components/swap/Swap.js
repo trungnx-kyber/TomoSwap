@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SwapView from './SwapView';
 import { connect } from 'react-redux';
+import { setWalletPassword } from "../../actions/accountAction";
 import * as swapActions from "../../actions/swapAction";
 import { setGlobalError } from "../../actions/globalAction";
 
@@ -22,6 +23,7 @@ function mapStateToProps(store) {
     error: swap.error,
     isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
+    walletType: account.walletType,
   };
 }
 
@@ -34,15 +36,29 @@ function mapDispatchToProps(dispatch) {
     swapToken: () => {dispatch(swapActions.swapToken())},
     setError: (error) => {dispatch(swapActions.setError(error))},
     setGlobalError: (error) => {dispatch(setGlobalError(error))},
+    setWalletPassword: (password) => {dispatch(setWalletPassword(password))}
   }
 }
 
 class Swap extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isSwapConfirmModalOpened: false
+    };
+  }
+
   componentDidMount = () => {
     this.props.fetchTokenPairRate();
   };
 
-  swap = () => {
+  handleSwapToken = () => {
+    this.props.swapToken();
+    this.closeSwapConfirmModal();
+  };
+
+  openSwapConfirmModal = () => {
     if (!this.props.sourceAmount) {
       this.props.setError("Source amount is required to make a swap");
       return;
@@ -53,13 +69,17 @@ class Swap extends Component {
       return;
     }
 
-    this.props.swapToken();
+    this.setState({isSwapConfirmModalOpened: true});
+  };
+
+  closeSwapConfirmModal = () => {
+    this.setState({isSwapConfirmModalOpened: false});
   };
 
   render() {
     return (
       <SwapView
-        swap={this.swap}
+        handleSwapToken={this.handleSwapToken}
         setSourceToken={this.props.setSourceToken}
         setSourceAmount={this.props.setSourceAmount}
         setDestToken={this.props.setDestToken}
@@ -70,6 +90,10 @@ class Swap extends Component {
         tokens={this.props.tokens}
         tokenPairRate={this.props.tokenPairRate}
         error={this.props.error}
+        walletType={this.props.walletType}
+        isSwapConfirmModalOpened={this.state.isSwapConfirmModalOpened}
+        openSwapConfirmModal={this.openSwapConfirmModal}
+        closeSwapConfirmModal={this.closeSwapConfirmModal}
         isAccountImported={this.props.isAccountImported}
         isTokenPairRateLoading={this.props.isTokenPairRateLoading}
         isDestAmountLoadingShown={this.props.isDestAmountLoadingShown}

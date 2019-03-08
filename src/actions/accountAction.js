@@ -3,6 +3,7 @@ export const accountActionTypes = {
   IMPORT_ACCOUNT: 'ACCOUNT.IMPORT_ACCOUNT',
   SET_BALANCE_LOADING: 'ACCOUNT.SET_BALANCE_LOADING',
   SET_WALLET: 'ACCOUNT.SET_WALLET',
+  SET_WALLET_PASSWORD: 'ACCOUNT.SET_WALLET_PASSWORD',
 };
 
 export function importAccount(address, walletType) {
@@ -16,6 +17,13 @@ export function setWallet(address = null, walletType = null) {
   return {
     type: accountActionTypes.SET_WALLET,
     payload: { address, walletType }
+  }
+}
+
+export function setWalletPassword(password) {
+  return {
+    type: accountActionTypes.SET_WALLET_PASSWORD,
+    payload: password
   }
 }
 

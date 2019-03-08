@@ -1,3 +1,5 @@
+import { getWeb3Instance } from '../services/web3Service';
+
 export function filterInputNumber(event, value, preVal) {
   const removedTextStr = value.replace(/[^0-9.]/g, '');
 
@@ -13,4 +15,10 @@ export function filterInputNumber(event, value, preVal) {
   if (preVal === str) return false;
 
   return true
+}
+
+export function isAddress(address) {
+  const web3 = getWeb3Instance();
+
+  return web3.utils.isAddress(address);
 }

@@ -5,7 +5,8 @@ const initialState = {
   sourceToken: TOMO,
   sourceAmount: '',
   toAddress: '',
-  error: null
+  error: null,
+  addressError: null
 };
 
 export default function transferReducer(state = initialState, action) {
@@ -34,6 +35,12 @@ export default function transferReducer(state = initialState, action) {
       return {
         ...state,
         error: action.payload
+      }
+    }
+    case transferActionTypes.SET_ADDRESS_ERROR: {
+      return {
+        ...state,
+        addressError: action.payload
       }
     }
     default:
