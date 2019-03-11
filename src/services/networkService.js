@@ -1,6 +1,7 @@
 import envConfig from "../config/env";
 import { numberToHex } from "../utils/helpers";
 import * as Web3Service from "./web3Service";
+import { getWeb3Instance } from "./web3Service";
 
 export function getSwapABI(data) {
   const networkProxyContract = Web3Service.getNetworkProxyContract();
@@ -16,15 +17,34 @@ export function getSwapABI(data) {
   ).encodeABI();
 }
 
-export function transfer(srcTokenAddress, destAddress, srcAmount) {
-  const tokenContract = Web3Service.getTokenContract(srcTokenAddress);
+// export function transfer(srcTokenAddress, destAddress, srcAmount) {
+//   const tokenContract = Web3Service.getTokenContract(srcTokenAddress);
+//
+//   return tokenContract.methods.transfer(destAddress, srcAmount).call();
+// }
 
-  return tokenContract.methods.transfer(destAddress, srcAmount).call();
+export function getAllowance(srcAddress, address, spender) {
+  const web3 = getWeb3Instance();
+  const tokenContract = Web3Service.getTokenContract(srcAddress, web3);
+  const allowanceABI = tokenContract.methods.allowance(address, spender).encodeABI();
+
+  return new Promise((resolve, reject) => {
+    web3.eth.call({
+      to: srcAddress,
+      data: allowanceABI
+    }).then((result) => {
+      const allowance = web3.eth.abi.decodeParameters(['uint256'], result);
+      resolve(+allowance[0])
+    }).catch((e) => {
+      reject(e);
+    });
+  });
 }
 
-export function approve(srcTokenAddress, srcAmount) {
-  const tokenContract = Web3Service.getTokenContract(srcTokenAddress);
-  return tokenContract.methods.approve(envConfig.NETWORK_PROXY_ADDRESS, srcAmount).call();
+export function getApproveABI(srcTokenAddress, amount) {
+  const web3 = getWeb3Instance();
+  const tokenContract = Web3Service.getTokenContract(srcTokenAddress, web3);
+  return tokenContract.methods.approve(envConfig.NETWORK_PROXY_ADDRESS, amount).encodeABI();
 }
 
 export function getRate(srcAddress, srcDecimals, destAddress, srcAmount) {

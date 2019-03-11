@@ -5,6 +5,8 @@ import * as accountActions from '../../actions/accountAction';
 import { setGlobalError } from '../../actions/globalAction';
 import appConfig from '../../config/app';
 import envConfig from "../../config/env";
+import MetamaskService from "../../services/accountServices/MetamaskService";
+import KeystoreService from "../../services/accountServices/KeystoreService";
 
 function mapStateToProps(store) {
   return {
@@ -15,8 +17,9 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
   return {
     setGlobalError: (error) => {dispatch(setGlobalError(error))},
-    importAccount: (address, walletType) => {dispatch(accountActions.importAccount(address, walletType))},
-    unsetAccount: () => {dispatch(accountActions.setWallet())},
+    setWallet: (address, walletType, walletService) => {dispatch(accountActions.setWallet(address, walletType, walletService))},
+    unsetWallet: () => {dispatch(accountActions.setWallet())},
+    fetchBalances: () => {dispatch(accountActions.fetchBalances())},
   }
 }
 
@@ -37,13 +40,17 @@ class ImportAccount extends Component {
 
     try {
       const accounts = await window.ethereum.enable();
-      this.props.importAccount(accounts[0], appConfig.WALLET_TYPE_METAMASK);
+      const address = accounts[0];
+      const walletService = new MetamaskService();
+
+      this.props.setWallet(address, appConfig.WALLET_TYPE_METAMASK, walletService);
+      this.props.fetchBalances();
 
       window.ethereum.on('accountsChanged', (accounts) => {
         if (accounts[0]) {
-          this.props.importAccount(accounts[0], appConfig.WALLET_TYPE_METAMASK);
+          this.props.setWallet(accounts[0], appConfig.WALLET_TYPE_METAMASK, walletService);
         } else {
-          this.props.unsetAccount();
+          this.props.unsetWallet();
         }
       });
     } catch (error) {
@@ -68,8 +75,10 @@ class ImportAccount extends Component {
           }
 
           const address = '0x' + keystore.address;
+          const walletService = new KeystoreService();
 
-          this.props.importAccount(address, appConfig.WALLET_TYPE_KEYSTORE);
+          this.props.setWallet(address, appConfig.WALLET_TYPE_KEYSTORE, walletService);
+          this.props.fetchBalances();
         } catch (e) {
           this.props.setGlobalError("You have chosen a malformed Keystore file");
         }
@@ -91,7 +100,7 @@ class ImportAccount extends Component {
         connectToMetamask={this.connectToMetamask}
         connectToKeystore={this.connectToKeystore}
         openKeystoreFileSelection={this.openKeystoreFileSelection}
-        unsetAccount={this.props.unsetAccount}
+        unsetWallet={this.props.unsetWallet}
       />
     )
   }

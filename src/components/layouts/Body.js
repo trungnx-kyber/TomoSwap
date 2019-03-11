@@ -6,8 +6,10 @@ import Transfer from '../transfer/Transfer';
 import Transaction from '../transaction/Transaction';
 import ImportAccount from '../account/ImportAccount';
 import * as globalActions from "../../actions/globalAction";
+import * as accountActions from "../../actions/accountAction";
 import AppConfig from "../../config/app";
 import Modal from "../../components/commons/Modal";
+import { getWeb3Instance } from "../../services/web3Service";
 
 function mapStateToProps(store) {
   const global = store.global;
@@ -20,12 +22,18 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setWeb3Service: (web3) => {dispatch(accountActions.setWeb3Service(web3))},
     setExchangeMode: (exchangeMode) => {dispatch(globalActions.setExchangeMode(exchangeMode))},
     resetGlobalError: () => {dispatch(globalActions.setGlobalError())},
   }
 }
 
 class Body extends Component {
+  componentDidMount = () => {
+    const web3 = getWeb3Instance();
+    this.props.setWeb3Service(web3);
+  };
+
   render() {
     const isSwapMode = this.props.exchangeMode === AppConfig.EXCHANGE_SWAP_MODE;
 

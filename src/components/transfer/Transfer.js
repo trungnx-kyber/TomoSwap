@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import TransferView from './TransferView';
 import { connect } from 'react-redux';
 import * as transferAction from "../../actions/transferAction";
-import { isAddress } from '../../utils/validators';
 import { setGlobalError } from "../../actions/globalAction";
 
 function mapStateToProps(store) {
@@ -19,6 +18,7 @@ function mapStateToProps(store) {
     addressError: transfer.addressError,
     isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
+    web3: account.web3,
   };
 }
 
@@ -51,7 +51,7 @@ class Transfer extends Component {
   handleSetToAddress = (event) => {
     const toAddress = (event.target.value).toLowerCase();
 
-    if (isAddress(toAddress)) {
+    if (this.props.web3.utils.isAddress(toAddress)) {
       this.props.setAddressError();
     } else {
       this.props.setAddressError("Given address is invalid");

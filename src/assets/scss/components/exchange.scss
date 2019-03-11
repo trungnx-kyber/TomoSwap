@@ -58,11 +58,25 @@
       color: #4a5675;
     }
 
-    &-gas {
+    &-text-light {
       font-size: 14px;
       font-weight: 500;
       color: #7a82a9;
       margin-top: 5px;
+    }
+
+    &-approve {
+      font-size: 14px;
+      font-weight: 500;
+      color: #727b8f;
+      margin-bottom: 10px;
+    }
+
+    &-address {
+      font-size: 14px;
+      font-weight: 600;
+      color: #475065;
+      word-break: break-word;
     }
 
     &-password {

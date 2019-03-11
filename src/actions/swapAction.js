@@ -1,8 +1,11 @@
 export const swapActionTypes = {
   FETCH_TOKEN_PAIR_RATE: 'SWAP.FETCH_TOKEN_PAIR_RATE',
+  APPROVE: 'SWAP.APPROVE',
   SET_TOKEN_PAIR_RATE_LOADING: 'SWAP.SET_TOKEN_PAIR_RATE_LOADING',
   SET_IS_DEST_AMOUNT_LOADING_SHOWN: 'SWAP.SET_IS_DEST_AMOUNT_LOADING_SHOWN',
   SET_TOKEN_PAIR_RATE: 'SWAP.SET_TOKEN_PAIR_RATE',
+  SET_SRC_TOKEN_ALLOWANCE: 'SWAP.SET_SRC_TOKEN_ALLOWANCE',
+  CHECK_SRC_TOKEN_ALLOWANCE: 'SWAP.CHECK_SRC_TOKEN_ALLOWANCE',
   SWAP_TOKEN: 'SWAP.SWAP_TOKEN',
   SET_SOURCE_TOKEN: 'SWAP.SET_SOURCE_TOKEN',
   SET_DEST_TOKEN: 'SWAP.SET_DEST_TOKEN',
@@ -10,6 +13,12 @@ export const swapActionTypes = {
   SET_DEST_AMOUNT: 'SWAP.SET_DEST_AMOUNT',
   SET_ERROR: 'SWAP.SET_ERROR',
 };
+
+export function approve() {
+  return {
+    type: swapActionTypes.APPROVE
+  }
+}
 
 export function fetchTokenPairRate() {
   return {
@@ -27,6 +36,20 @@ export function setSourceToken(token) {
   return {
     type: swapActionTypes.SET_SOURCE_TOKEN,
     payload: token
+  }
+}
+
+export function checkSrcTokenAllowance(srcTokenAddress, accountAddress) {
+  return {
+    type: swapActionTypes.CHECK_SRC_TOKEN_ALLOWANCE,
+    payload: { srcTokenAddress, accountAddress }
+  }
+}
+
+export function setSrcTokenAllowance(allowance = null) {
+  return {
+    type: swapActionTypes.SET_SRC_TOKEN_ALLOWANCE,
+    payload: allowance
   }
 }
 

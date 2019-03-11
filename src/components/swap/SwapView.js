@@ -47,34 +47,51 @@ export default class SwapView extends Component {
         </div>
 
         <div className={"exchange__button-container common__fade-in"}>
-          <div className={`exchange__button common__button-gradient ${disabledClass}`} onClick={() => this.props.openSwapConfirmModal()}>Swap Now</div>
+          <div className={`exchange__button common__button-gradient ${disabledClass}`} onClick={() => this.props.openModal()}>Swap Now</div>
         </div>
 
-        <Modal isActive={this.props.isSwapConfirmModalOpened} handleClose={() => this.props.closeSwapConfirmModal()}>
-          <div className={"exchange__modal"}>
-            <div className={"modal__header"}>Confirm Swap</div>
-            <div className={"modal__body exchange__modal-body"}>
-              <div className={"modal__body-top common__flexbox exchange__modal-number"}>
-                <div className={"exchange__modal-number-text"}>{formatAmount(this.props.sourceAmount)} {this.props.sourceToken.symbol}</div>
-                <div className={"exchange__modal-number-icon"}/>
-                <div className={"exchange__modal-number-text"}>{formatAmount(this.props.destAmount)} {this.props.destToken.symbol}</div>
-              </div>
-              <div className={"modal__body-bot"}>
-                <div>
-                  <div className={"exchange__modal-text"}>1 {this.props.sourceToken.symbol} = {formatAmount(this.props.tokenPairRate)} {this.props.destToken.symbol}</div>
-                  <div className={"exchange__modal-gas"}>GAS fee: * {TOMO.symbol}</div>
+        <Modal isActive={this.props.isModalOpened} handleClose={() => this.props.closeModal()}>
+          {!this.props.isApproveNeeded && (
+            <div className={"exchange__modal"}>
+              <div className={"modal__header"}>Confirm Swap</div>
+              <div className={"modal__body exchange__modal-body"}>
+                <div className={"modal__body-top common__flexbox exchange__modal-number"}>
+                  <div className={"exchange__modal-box"}>{formatAmount(this.props.sourceAmount)} {this.props.sourceToken.symbol}</div>
+                  <div className={"exchange__modal-icon"}/>
+                  <div className={"exchange__modal-box"}>{formatAmount(this.props.destAmount)} {this.props.destToken.symbol}</div>
                 </div>
+                <div className={"modal__body-bot"}>
+                  <div>
+                    <div className={"exchange__modal-text"}>1 {this.props.sourceToken.symbol} = {formatAmount(this.props.tokenPairRate)} {this.props.destToken.symbol}</div>
+                    <div className={"exchange__modal-text-light"}>GAS fee: * {TOMO.symbol}</div>
+                  </div>
 
-                {this.props.walletType === appConfig.WALLET_TYPE_KEYSTORE && (
-                  <PasswordInput/>
-                )}
+                  {this.props.walletType === appConfig.WALLET_TYPE_KEYSTORE && (
+                    <PasswordInput/>
+                  )}
+                </div>
+              </div>
+              <div className={"modal__footer common__flexbox"}>
+                <div className={"modal__button"} onClick={() => this.props.closeModal()}>Cancel</div>
+                <div className={"modal__button modal__button--gradient"} onClick={() => this.props.swap()}>Confirm</div>
               </div>
             </div>
-            <div className={"modal__footer common__flexbox"}>
-              <div className={"modal__button"} onClick={() => this.props.closeSwapConfirmModal()}>Cancel</div>
-              <div className={"modal__button modal__button--gradient"} onClick={() => this.props.handleSwapToken()}>Confirm</div>
+          )}
+
+          {this.props.isApproveNeeded && (
+            <div className={"exchange__modal common__fade-in"}>
+              <div className={"modal__header"}>Approve Token</div>
+              <div className={"modal__body modal__body--left"}>
+                <div className={"modal__body-top"}>
+                  <div className={"exchange__modal-approve"}>You need to grant permission for TomoSwap to interact with {this.props.sourceToken.symbol} with this Address:</div>
+                  <div className={"exchange__modal-address"}>{this.props.accountAddress}</div>
+                </div>
+              </div>
+              <div className={"modal__footer common__flexbox common__flexbox--center"}>
+                <div className={"modal__button modal__button--gradient"} onClick={() => this.props.approve(this.props.sourceToken.address)}>Approve</div>
+              </div>
             </div>
-          </div>
+          )}
         </Modal>
       </div>
     )

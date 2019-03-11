@@ -4,16 +4,19 @@ import { connect } from 'react-redux';
 import { setWalletPassword } from "../../actions/accountAction";
 import * as swapActions from "../../actions/swapAction";
 import { setGlobalError } from "../../actions/globalAction";
+import { TOMO } from "../../config/tokens";
 
 function mapStateToProps(store) {
   const token = store.token;
   const account = store.account;
   const swap = store.swap;
+  const tx = store.tx;
   const tokens = token.tokens;
 
   return {
     tokens: tokens,
     sourceToken: swap.sourceToken,
+    isApproveNeeded: tx.txHashApprove ? false : swap.srcTokenAllowance !== null && swap.srcTokenAllowance < swap.sourceAmount,
     destToken: swap.destToken,
     sourceAmount: swap.sourceAmount,
     destAmount: swap.destAmount,
@@ -21,6 +24,7 @@ function mapStateToProps(store) {
     isTokenPairRateLoading: swap.isTokenPairRateLoading,
     isDestAmountLoadingShown: swap.isDestAmountLoadingShown,
     error: swap.error,
+    accountAddress: account.address,
     isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
     walletType: account.walletType,
@@ -29,7 +33,10 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    approve: (srcTokenAddress) => {dispatch(swapActions.approve(srcTokenAddress))},
     setSourceToken: (token) => {dispatch(swapActions.setSourceToken(token))},
+    checkSrcTokenAllowance: (srcTokenAddress, accountAddress) => {dispatch(swapActions.checkSrcTokenAllowance(srcTokenAddress, accountAddress))},
+    resetSrcTokenAllowance: () => {dispatch(swapActions.setSrcTokenAllowance())},
     setDestToken: (token) => {dispatch(swapActions.setDestToken(token))},
     setSourceAmount: (amount) => {dispatch(swapActions.setSourceAmount(amount))},
     fetchTokenPairRate: () => {dispatch(swapActions.fetchTokenPairRate())},
@@ -45,7 +52,7 @@ class Swap extends Component {
     super(props);
 
     this.state = {
-      isSwapConfirmModalOpened: false
+      isModalOpened: false
     };
   }
 
@@ -55,10 +62,10 @@ class Swap extends Component {
 
   handleSwapToken = () => {
     this.props.swapToken();
-    this.closeSwapConfirmModal();
+    this.closeModal();
   };
 
-  openSwapConfirmModal = () => {
+  openModal = () => {
     if (!this.props.sourceAmount) {
       this.props.setError("Source amount is required to make a swap");
       return;
@@ -69,21 +76,25 @@ class Swap extends Component {
       return;
     }
 
-    this.setState({isSwapConfirmModalOpened: true});
+    if (this.props.sourceToken.symbol !== TOMO.symbol && this.props.isAccountImported) {
+      this.props.checkSrcTokenAllowance(this.props.sourceToken.address, this.props.accountAddress);
+    } else {
+      this.props.resetSrcTokenAllowance();
+    }
+
+    this.setState({isModalOpened: true});
   };
 
-  closeSwapConfirmModal = () => {
-    this.setState({isSwapConfirmModalOpened: false});
+  closeModal = () => {
+    this.setState({isModalOpened: false});
   };
 
   render() {
     return (
       <SwapView
-        handleSwapToken={this.handleSwapToken}
-        setSourceToken={this.props.setSourceToken}
-        setSourceAmount={this.props.setSourceAmount}
-        setDestToken={this.props.setDestToken}
+        accountAddress={this.props.accountAddress}
         sourceToken={this.props.sourceToken}
+        isApproveNeeded={this.props.isApproveNeeded}
         destToken={this.props.destToken}
         sourceAmount={this.props.sourceAmount}
         destAmount={this.props.destAmount}
@@ -91,13 +102,18 @@ class Swap extends Component {
         tokenPairRate={this.props.tokenPairRate}
         error={this.props.error}
         walletType={this.props.walletType}
-        isSwapConfirmModalOpened={this.state.isSwapConfirmModalOpened}
-        openSwapConfirmModal={this.openSwapConfirmModal}
-        closeSwapConfirmModal={this.closeSwapConfirmModal}
+        isModalOpened={this.state.isModalOpened}
         isAccountImported={this.props.isAccountImported}
         isTokenPairRateLoading={this.props.isTokenPairRateLoading}
         isDestAmountLoadingShown={this.props.isDestAmountLoadingShown}
         isBalanceLoading={this.props.isBalanceLoading}
+        approve={this.props.approve}
+        swap={this.handleSwapToken}
+        setSourceToken={this.props.setSourceToken}
+        setSourceAmount={this.props.setSourceAmount}
+        setDestToken={this.props.setDestToken}
+        openModal={this.openModal}
+        closeModal={this.closeModal}
       />
     )
   }

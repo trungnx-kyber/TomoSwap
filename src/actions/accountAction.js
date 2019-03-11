@@ -1,22 +1,28 @@
 export const accountActionTypes = {
-  FETCH_BALANCE: 'ACCOUNT.FETCH_BALANCE',
-  IMPORT_ACCOUNT: 'ACCOUNT.IMPORT_ACCOUNT',
+  FETCH_BALANCES: 'ACCOUNT.FETCH_BALANCES',
+  SET_WEB3_SERVICE: 'ACCOUNT.SET_WEB3_SERVICE',
   SET_BALANCE_LOADING: 'ACCOUNT.SET_BALANCE_LOADING',
   SET_WALLET: 'ACCOUNT.SET_WALLET',
   SET_WALLET_PASSWORD: 'ACCOUNT.SET_WALLET_PASSWORD',
 };
 
-export function importAccount(address, walletType) {
+export function fetchBalances() {
   return {
-    type: accountActionTypes.IMPORT_ACCOUNT,
-    payload: { address, walletType }
+    type: accountActionTypes.FETCH_BALANCES
   }
 }
 
-export function setWallet(address = null, walletType = null) {
+export function setWeb3Service(web3) {
+  return {
+    type: accountActionTypes.SET_WEB3_SERVICE,
+    payload: web3
+  }
+}
+
+export function setWallet(address = null, walletType = null, walletService = null) {
   return {
     type: accountActionTypes.SET_WALLET,
-    payload: { address, walletType }
+    payload: { address, walletType, walletService }
   }
 }
 

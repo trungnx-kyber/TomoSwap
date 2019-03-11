@@ -5,20 +5,18 @@ import { getTokenBalances } from "../services/networkService";
 import { setTokens } from "../actions/tokenAction";
 import { formatBigNumber } from "../utils/helpers";
 import AppConfig from "../config/app";
-import { setWallet, setBalanceLoading } from "../actions/accountAction";
+import { setBalanceLoading } from "../actions/accountAction";
 
 const getTokens = state => state.token.tokens;
+const getAccount = state => state.account;
 
-function *importAccount(action) {
-  const { address, walletType } = action.payload;
+function *fetchBalancesChannel() {
+  const account = yield select(getAccount);
+  const address = account.address;
 
-  yield put(setWallet(address, walletType));
-  yield call(fetchBalancesChannel, address);
-}
-
-function *fetchBalancesChannel(address) {
   yield call(fetchBalance, address, true);
-  while (true) {
+
+  while (!!address) {
     yield call(fetchBalance, address);
   }
 }
@@ -39,5 +37,5 @@ function *fetchBalance(address, isFirstLoading = false) {
 }
 
 export default function* accountWatcher() {
-  yield takeLatest(accountActions.accountActionTypes.IMPORT_ACCOUNT, importAccount);
+  yield takeLatest(accountActions.accountActionTypes.FETCH_BALANCES, fetchBalancesChannel);
 }

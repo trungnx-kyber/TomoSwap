@@ -11,8 +11,8 @@ export function getNetworkProxyContract() {
   return web3.eth.Contract(envConfig.NETWORK_PROXY_ABI, envConfig.NETWORK_PROXY_ADDRESS);
 }
 
-export function getTokenContract(srcTokenAddress) {
-  const web3 = getWeb3Instance();
+export function getTokenContract(srcTokenAddress, web3 = null) {
+  web3 = web3 ? web3 : getWeb3Instance();
 
   return web3.eth.Contract(envConfig.TOKEN_ABI, srcTokenAddress);
 }

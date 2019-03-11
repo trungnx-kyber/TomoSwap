@@ -1,6 +1,6 @@
 import { delay } from 'redux-saga';
 import { takeLatest, call, put, select } from 'redux-saga/effects';
-import { getSwapABI, getRate } from "../services/networkService";
+import { getSwapABI, getRate, getAllowance, getApproveABI } from "../services/networkService";
 import * as swapActions from "../actions/swapAction";
 import * as txActions from "../actions/transactionAction";
 import {
@@ -11,9 +11,7 @@ import {
 } from "../utils/helpers";
 import appConfig from "../config/app";
 import envConfig from "../config/env";
-import { sendTx, trackTx } from "../services/accountService";
 import { TOMO } from "../config/tokens";
-import { getWeb3Instance } from "../services/web3Service";
 
 const getSwapState = state => state.swap;
 const getAccountState = state => state.account;
@@ -21,6 +19,7 @@ const getAccountState = state => state.account;
 function *swapToken() {
   const swap = yield select(getSwapState);
   const account = yield select(getAccountState);
+  const web3 = account.web3;
   const srcToken = swap.sourceToken;
   const srcAmount = numberToHex(swap.sourceAmount, srcToken.decimals);
   const minConversionRate = calculateMinConversionRate(appConfig.DEFAULT_SLIPPAGE_RATE, swap.tokenPairRate);
@@ -36,7 +35,6 @@ function *swapToken() {
       walletId: appConfig.DEFAULT_WALLET_ID
     });
 
-    const web3 = getWeb3Instance();
     const gasPrice = yield call(web3.eth.getGasPrice);
     // const nonce = yield call(web3.eth.getTransactionCount, account.address);
 
@@ -44,19 +42,21 @@ function *swapToken() {
       from: account.address,
       to: envConfig.NETWORK_PROXY_ADDRESS,
       value: srcToken.symbol === TOMO.symbol ? srcAmount : '0x0',
-      gas: appConfig.DEFAULT_GAS,
       gasPrice: gasPrice,
       data: swapABI,
+      // gas: appConfig.DEFAULT_GAS,
       // nonce: nonce,
+      // chainId: chainId
+      // gasLimit: gas,
     };
 
-    const txHash = yield call(sendTx, account.walletType, txObject);
+    const txHash = yield call(account.walletService.sendTransaction, txObject);
     yield put(txActions.setTxHash(txHash));
     let isTxMined = false;
 
     while(!isTxMined) {
       yield call(delay, appConfig.TX_TRACKING_INTERVAL);
-      const txReceipt = yield call(trackTx, txHash);
+      const txReceipt = yield call(web3.eth.getTransactionReceipt, txHash);
 
       if (txReceipt.status === '0x1') {
         yield put(txActions.setIsTxMined(txReceipt.status));
@@ -68,6 +68,37 @@ function *swapToken() {
     }
   } catch (error) {
     console.log(error.message);
+  }
+}
+
+function *approve(action) {
+  const srcTokenAddress = action.payload;
+  const amount = getBiggestNumber();
+
+  const swap = yield select(getSwapState);
+  const account = yield select(getAccountState);
+  const srcToken = swap.sourceToken;
+  const gasPrice = yield call(account.web3.eth.getGasPrice);
+
+  try {
+    const approveABI = yield call(getApproveABI, srcTokenAddress, amount);
+
+    const txObject = {
+      from: account.address,
+      to: srcToken.address,
+      value: '0x0',
+      gasPrice: gasPrice,
+      data: approveABI,
+      // gas: appConfig.DEFAULT_GAS,
+      // nonce: nonce,
+      // chainId: chainId
+      // gasLimit: gas,
+    };
+
+    const txHashApprove = yield call(account.walletService.sendTransaction, txObject);
+    yield put(txActions.setTxHashApprove(txHashApprove));
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -114,6 +145,17 @@ function *fetchTokenPairRate(showDestAmountLoading = false) {
   }
 }
 
+function *checkSrcTokenAllowance(action) {
+  const { srcTokenAddress, accountAddress } = action.payload;
+
+  try {
+    const allowance = yield call(getAllowance, srcTokenAddress, accountAddress, envConfig.NETWORK_PROXY_ADDRESS);
+    yield put(swapActions.setSrcTokenAllowance(allowance));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function *validateValidInput(swap, account) {
   const isAccountImported = !!account.address;
   const sourceToken = swap.sourceToken;
@@ -154,9 +196,11 @@ function *setError(errorMessage) {
 }
 
 export default function* swapWatcher() {
+  yield takeLatest(swapActions.swapActionTypes.CHECK_SRC_TOKEN_ALLOWANCE, checkSrcTokenAllowance);
   yield takeLatest(swapActions.swapActionTypes.FETCH_TOKEN_PAIR_RATE, fetchTokenPairRateWithInterval);
   yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_TOKEN, fetchTokenPairRate);
   yield takeLatest(swapActions.swapActionTypes.SET_DEST_TOKEN, fetchTokenPairRate);
   yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_AMOUNT, fetchTokenPairRate);
   yield takeLatest(swapActions.swapActionTypes.SWAP_TOKEN, swapToken);
+  yield takeLatest(swapActions.swapActionTypes.APPROVE, approve);
 }

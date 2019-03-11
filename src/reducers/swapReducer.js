@@ -9,6 +9,7 @@ const initialState = {
   tokenPairRate: 0,
   isTokenPairRateLoading: true,
   isDestAmountLoadingShown: true,
+  srcTokenAllowance: null,
   error: null
 };
 
@@ -18,6 +19,12 @@ export default function swapReducer(state = initialState, action) {
       return {
         ...state,
         sourceToken: action.payload
+      }
+    }
+    case swapActionTypes.SET_SRC_TOKEN_ALLOWANCE: {
+      return {
+        ...state,
+        srcTokenAllowance: action.payload
       }
     }
     case swapActionTypes.SET_DEST_TOKEN: {

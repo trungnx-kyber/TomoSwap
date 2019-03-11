@@ -34,7 +34,7 @@ export default class ImportAccountView extends Component {
         )}
 
         {this.props.address && (
-          <div className={"account__title account__title--pointer common__fade-in"} onClick={() => this.props.unsetAccount()}>Connect other Wallet</div>
+          <div className={"account__title account__title--pointer common__fade-in"} onClick={() => this.props.unsetWallet()}>Connect other Wallet</div>
         )}
       </div>
     )
