@@ -11,13 +11,13 @@ const getTokens = state => state.token.tokens;
 const getAccount = state => state.account;
 
 function *fetchBalancesChannel() {
-  const account = yield select(getAccount);
-  const address = account.address;
+  let account = yield select(getAccount);
 
-  yield call(fetchBalance, address, true);
+  yield call(fetchBalance, account.address, true);
 
-  while (!!address) {
-    yield call(fetchBalance, address);
+  while (!!account.address) {
+    account = yield select(getAccount);
+    yield call(fetchBalance, account.address);
   }
 }
 

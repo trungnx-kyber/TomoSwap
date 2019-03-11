@@ -79,7 +79,7 @@ export default class TransactionView extends Component {
                       <Fragment>
                         <span>{formatAmount(this.props.sourceAmount)} {this.props.sourceToken.symbol}</span>
                         <span className={"tx__token-text--light"}> to </span>
-                        <span>{this.props.toAddress}</span>
+                        <span className={"tx__address"}>{this.props.toAddress}</span>
                       </Fragment>
                     )}
                   </div>

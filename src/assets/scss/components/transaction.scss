@@ -31,4 +31,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  &__address {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

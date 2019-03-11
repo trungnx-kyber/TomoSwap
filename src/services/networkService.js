@@ -17,11 +17,16 @@ export function getSwapABI(data) {
   ).encodeABI();
 }
 
-// export function transfer(srcTokenAddress, destAddress, srcAmount) {
-//   const tokenContract = Web3Service.getTokenContract(srcTokenAddress);
-//
-//   return tokenContract.methods.transfer(destAddress, srcAmount).call();
-// }
+export function getTransferABI(data) {
+  const tokenContract = Web3Service.getTokenContract(data.srcAddress);
+  return tokenContract.methods.transfer(data.toAddress, data.srcAmount).encodeABI();
+}
+
+export function getApproveABI(srcTokenAddress, amount) {
+  const web3 = getWeb3Instance();
+  const tokenContract = Web3Service.getTokenContract(srcTokenAddress, web3);
+  return tokenContract.methods.approve(envConfig.NETWORK_PROXY_ADDRESS, amount).encodeABI();
+}
 
 export function getAllowance(srcAddress, address, spender) {
   const web3 = getWeb3Instance();
@@ -39,12 +44,6 @@ export function getAllowance(srcAddress, address, spender) {
       reject(e);
     });
   });
-}
-
-export function getApproveABI(srcTokenAddress, amount) {
-  const web3 = getWeb3Instance();
-  const tokenContract = Web3Service.getTokenContract(srcTokenAddress, web3);
-  return tokenContract.methods.approve(envConfig.NETWORK_PROXY_ADDRESS, amount).encodeABI();
 }
 
 export function getRate(srcAddress, srcDecimals, destAddress, srcAmount) {
