@@ -12,6 +12,7 @@ import {
 import appConfig from "../config/app";
 import envConfig from "../config/env";
 import { TOMO } from "../config/tokens";
+import { getTxObject, fetchTransactionReceipt } from "./transactionSaga";
 
 const getSwapState = state => state.swap;
 const getAccountState = state => state.account;
@@ -19,7 +20,6 @@ const getAccountState = state => state.account;
 function *swapToken() {
   const swap = yield select(getSwapState);
   const account = yield select(getAccountState);
-  const web3 = account.web3;
   const srcToken = swap.sourceToken;
   const srcAmount = numberToHex(swap.sourceAmount, srcToken.decimals);
   const minConversionRate = calculateMinConversionRate(appConfig.DEFAULT_SLIPPAGE_RATE, swap.tokenPairRate);
@@ -35,65 +35,34 @@ function *swapToken() {
       walletId: appConfig.DEFAULT_WALLET_ID
     });
 
-    const gasPrice = yield call(web3.eth.getGasPrice);
-    // const nonce = yield call(web3.eth.getTransactionCount, account.address);
-
-    const txObject = {
+    const txObject = yield call(getTxObject, {
       from: account.address,
       to: envConfig.NETWORK_PROXY_ADDRESS,
       value: srcToken.symbol === TOMO.symbol ? srcAmount : '0x0',
-      gasPrice: gasPrice,
-      data: swapABI,
-      // gas: appConfig.DEFAULT_GAS,
-      // nonce: nonce,
-      // chainId: chainId
-      // gasLimit: gas,
-    };
+      data: swapABI
+    });
 
     const txHash = yield call(account.walletService.sendTransaction, txObject);
     yield put(txActions.setTxHash(txHash));
-    let isTxMined = false;
-
-    while(!isTxMined) {
-      yield call(delay, appConfig.TX_TRACKING_INTERVAL);
-      const txReceipt = yield call(web3.eth.getTransactionReceipt, txHash);
-
-      if (txReceipt.status === '0x1') {
-        yield put(txActions.setIsTxMined(txReceipt.status));
-        isTxMined = true;
-      } else if (txReceipt.status === '0x0') {
-        yield put(txActions.setTxError("There is something wrong with the transaction!"));
-        isTxMined = true;
-      }
-    }
+    yield call(fetchTransactionReceipt, txHash);
   } catch (error) {
     console.log(error.message);
   }
 }
 
 function *approve(action) {
-  const srcTokenAddress = action.payload;
-  const amount = getBiggestNumber();
-
   const swap = yield select(getSwapState);
   const account = yield select(getAccountState);
-  const srcToken = swap.sourceToken;
-  const gasPrice = yield call(account.web3.eth.getGasPrice);
 
   try {
-    const approveABI = yield call(getApproveABI, srcTokenAddress, amount);
+    const approveABI = yield call(getApproveABI, action.payload, getBiggestNumber());
 
-    const txObject = {
+    const txObject = yield call(getTxObject, {
       from: account.address,
-      to: srcToken.address,
+      to: swap.sourceToken.address,
       value: '0x0',
-      gasPrice: gasPrice,
       data: approveABI,
-      // gas: appConfig.DEFAULT_GAS,
-      // nonce: nonce,
-      // chainId: chainId
-      // gasLimit: gas,
-    };
+    });
 
     const txHashApprove = yield call(account.walletService.sendTransaction, txObject);
     yield put(txActions.setTxHashApprove(txHashApprove));
