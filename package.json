@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "bignumber.js": "^8.1.1",
+    "ethereumjs-tx": "^1.3.7",
+    "ethereumjs-util": "^6.1.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",

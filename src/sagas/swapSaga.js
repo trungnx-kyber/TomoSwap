@@ -24,6 +24,7 @@ function *swapToken() {
   const srcToken = swap.sourceToken;
   const srcAmount = numberToHex(swap.sourceAmount, srcToken.decimals);
   const minConversionRate = calculateMinConversionRate(appConfig.DEFAULT_SLIPPAGE_RATE, swap.tokenPairRate);
+  const isSrcTokenTOMO = srcToken.symbol === TOMO.symbol;
 
   try {
     const swapABI = yield call(getSwapABI, {
@@ -39,11 +40,12 @@ function *swapToken() {
     const txObject = yield call(getTxObject, {
       from: account.address,
       to: envConfig.NETWORK_PROXY_ADDRESS,
-      value: srcToken.symbol === TOMO.symbol ? srcAmount : '0x0',
-      data: swapABI
+      value: isSrcTokenTOMO ? srcAmount : '0x0',
+      data: swapABI,
+      gasLimit: isSrcTokenTOMO ? appConfig.DEFAULT_SWAP_TOMO_GAS_LIMIT : appConfig.DEFAULT_SWAP_TOKEN_GAS_LIMIT
     });
 
-    const txHash = yield call(account.walletService.sendTransaction, txObject);
+    const txHash = yield call(account.walletService.sendTransaction, txObject, account.walletPassword);
     yield put(txActions.setTxHash(txHash));
     yield call(fetchTransactionReceipt, txHash);
   } catch (error) {
@@ -65,7 +67,7 @@ function *approve(action) {
       data: approveABI,
     });
 
-    const txHashApprove = yield call(account.walletService.sendTransaction, txObject);
+    const txHashApprove = yield call(account.walletService.sendTransaction, txObject, account.walletPassword);
     yield put(txActions.setTxHashApprove(txHashApprove));
   } catch (e) {
     console.log(e);
@@ -77,12 +79,12 @@ function *forceFetchNewDataFromNode() {
   yield call(fetchEstimateGasUsed);
 }
 
-function *fetchEstimateGasUsedInterval() {
+/*function *fetchEstimateGasUsedInterval() {
   while(true) {
     yield call(fetchEstimateGasUsed);
     yield call(delay, appConfig.ESTIMATE_GAS_USED_INTERVAL);
   }
-}
+}*/
 
 function *fetchEstimateGasUsed() {
   const swap = yield select(getSwapState);
@@ -90,7 +92,7 @@ function *fetchEstimateGasUsed() {
   const srcToken = swap.sourceToken;
   const srcAmount = swap.sourceAmount ? numberToHex(swap.sourceAmount, srcToken.decimals) : "0x0";
   const minConversionRate = calculateMinConversionRate(appConfig.DEFAULT_SLIPPAGE_RATE, swap.tokenPairRate);
-  const isSwapTOMO = srcToken.address == TOMO.address || swap.destToken.address == TOMO.address;
+  const isSwapTOMO = srcToken.address === TOMO.address || swap.destToken.address === TOMO.address;
   const defaultGasUsed = isSwapTOMO ? appConfig.DEFAULT_SWAP_TOMO_GAS_LIMIT : appConfig.DEFAULT_SWAP_TOKEN_GAS_LIMIT;
 
   try {

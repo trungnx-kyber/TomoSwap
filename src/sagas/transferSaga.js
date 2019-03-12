@@ -39,7 +39,7 @@ function *transfer() {
       data: txData
     });
 
-    const txHash = yield call(account.walletService.sendTransaction, txObject);
+    const txHash = yield call(account.walletService.sendTransaction, txObject, account.walletPassword);
     yield put(txActions.setTxHash(txHash));
     yield call(fetchTransactionReceipt, txHash);
   } catch (error) {

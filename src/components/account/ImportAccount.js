@@ -67,15 +67,16 @@ class ImportAccount extends Component {
 
       fileReader.onload = () => {
         try {
-          const keystore = JSON.parse(fileReader.result);
+          const keystoreString = fileReader.result.toLowerCase();
+          const keystore = JSON.parse(keystoreString);
 
-          if (!keystore.address || !keystore.Crypto) {
+          if (!keystore.address || !keystore.crypto) {
             this.props.setGlobalError("You have chosen an invalid Keystore file");
             return;
           }
 
           const address = '0x' + keystore.address;
-          const walletService = new KeystoreService();
+          const walletService = new KeystoreService(keystoreString);
 
           this.props.setWallet(address, appConfig.WALLET_TYPE_KEYSTORE, walletService);
           this.props.fetchBalances();

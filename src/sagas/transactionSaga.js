@@ -2,6 +2,7 @@ import { delay } from "redux-saga";
 import { select, call, put } from "redux-saga/es/effects";
 import * as txActions from "../actions/transactionAction";
 import appConfig from "../config/app";
+import envConfig from "../config/env";
 
 const getWeb3Instance = state => state.account.web3;
 
@@ -25,18 +26,16 @@ export function *fetchTransactionReceipt(txHash) {
 
 export function *getTxObject(data) {
   const web3 = yield select(getWeb3Instance);
-  const gasPrice = yield call(web3.eth.getGasPrice);
-  // const nonce = yield call(web3.eth.getTransactionCount, data.from);
+  const nonce = yield call(web3.eth.getTransactionCount, data.from);
 
   return {
     from: data.from,
     to: data.to,
     value: data.value,
     data: data.data,
-    gasPrice: gasPrice,
-    // gas: appConfig.DEFAULT_GAS,
-    // nonce: nonce,
-    // chainId: chainId
-    // gasLimit: gas,
+    gasPrice: appConfig.DEFAULT_GAS_PRICE,
+    gasLimit: data.gasLimit ? data.gasLimit : 200000,
+    nonce: nonce,
+    chainId: envConfig.NETWORK_ID,
   };
 }
