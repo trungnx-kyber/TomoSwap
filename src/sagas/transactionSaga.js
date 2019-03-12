@@ -34,7 +34,7 @@ export function *getTxObject(data) {
     value: data.value,
     data: data.data,
     gasPrice: appConfig.DEFAULT_GAS_PRICE,
-    gasLimit: data.gasLimit ? data.gasLimit : 200000,
+    gasLimit: data.gasLimit,
     nonce: nonce,
     chainId: envConfig.NETWORK_ID,
   };

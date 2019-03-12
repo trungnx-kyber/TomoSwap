@@ -20,6 +20,7 @@ export default class TransferView extends Component {
             setSourceToken={this.props.setSourceToken}
             setSourceAmount={this.props.setSourceAmount}
             isAccountImported={this.props.isAccountImported}
+            txFeeInTOMO={this.props.txFeeInTOMO}
             isBalanceLoading={this.props.isBalanceLoading}
             error={this.props.error}
           />
@@ -53,7 +54,7 @@ export default class TransferView extends Component {
               </div>
               <div className={"modal__body-bot"}>
                 <div>
-                  <div className={"exchange__modal-gas"}>GAS fee: * {TOMO.symbol}</div>
+                  <div className={"exchange__modal-gas"}>GAS fee: {this.props.txFeeInTOMO} {TOMO.symbol}</div>
                 </div>
                 {this.props.walletType === appConfig.WALLET_TYPE_KEYSTORE && (
                   <PasswordInput/>

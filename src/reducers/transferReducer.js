@@ -31,6 +31,18 @@ export default function transferReducer(state = initialState, action) {
         toAddress: action.payload
       }
     }
+    case transferActionTypes.SET_TX_FEE_IN_TOMO: {
+      return {
+        ...state,
+        txFeeInTOMO: action.payload
+      }
+    }
+    case transferActionTypes.SET_TX_GAS_LIMIT: {
+      return {
+        ...state,
+        gasLimit: action.payload
+      }
+    }
     case transferActionTypes.SET_ERROR: {
       return {
         ...state,

@@ -11,7 +11,8 @@ export const swapActionTypes = {
   SET_DEST_TOKEN: 'SWAP.SET_DEST_TOKEN',
   SET_SOURCE_AMOUNT: 'SWAP.SET_SOURCE_AMOUNT',
   SET_DEST_AMOUNT: 'SWAP.SET_DEST_AMOUNT',
-  SET_TRANSACTION_FEE_IN_TOMO: 'SWAP.SET_TRANSACTION_FEE_IN_TOMO',
+  SET_TX_FEE_IN_TOMO: 'SWAP.SET_TX_FEE_IN_TOMO',
+  SET_TX_GAS_LIMIT: 'SWAP.SET_TX_GAS_LIMIT',
   SET_ERROR: 'SWAP.SET_ERROR',
 };
 
@@ -96,10 +97,17 @@ export function setIsDestAmountLoadingShown(isLoading) {
   }
 }
 
-export function setTransactionFeeInTOMO(txFee) {
+export function setTxFeeInTOMO(txFee) {
   return {
-    type: swapActionTypes.SET_TRANSACTION_FEE_IN_TOMO,
+    type: swapActionTypes.SET_TX_FEE_IN_TOMO,
     payload: txFee
+  }
+}
+
+export function setTxGasLimit(gasLimit) {
+  return {
+    type: swapActionTypes.SET_TX_GAS_LIMIT,
+    payload: gasLimit
   }
 }
 

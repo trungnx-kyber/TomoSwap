@@ -18,6 +18,8 @@ function mapStateToProps(store) {
     addressError: transfer.addressError,
     isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
+    txFeeInTOMO: transfer.txFeeInTOMO,
+    gasLimit: transfer.gasLimit,
     web3: account.web3,
     walletType: account.walletType,
   };
@@ -92,6 +94,8 @@ class Transfer extends Component {
         transfer={this.transfer}
         isAccountImported={this.props.isAccountImported}
         isBalanceLoading={this.props.isBalanceLoading}
+        txFeeInTOMO={this.props.txFeeInTOMO}
+        gasLimit={this.props.gasLimit}
         isTransferConfirmModalOpened={this.state.isTransferConfirmModalOpened}
         openTransferConfirmModal={this.openTransferConfirmModal}
         closeTransferConfirmModal={this.closeTransferConfirmModal}
