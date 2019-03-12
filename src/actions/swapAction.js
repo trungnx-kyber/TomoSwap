@@ -11,6 +11,7 @@ export const swapActionTypes = {
   SET_DEST_TOKEN: 'SWAP.SET_DEST_TOKEN',
   SET_SOURCE_AMOUNT: 'SWAP.SET_SOURCE_AMOUNT',
   SET_DEST_AMOUNT: 'SWAP.SET_DEST_AMOUNT',
+  SET_TRANSACTION_FEE_IN_TOMO: 'SWAP.SET_TRANSACTION_FEE_IN_TOMO',
   SET_ERROR: 'SWAP.SET_ERROR',
 };
 
@@ -92,6 +93,13 @@ export function setIsDestAmountLoadingShown(isLoading) {
   return {
     type: swapActionTypes.SET_IS_DEST_AMOUNT_LOADING_SHOWN,
     payload: isLoading
+  }
+}
+
+export function setTransactionFeeInTOMO(txFee) {
+  return {
+    type: swapActionTypes.SET_TRANSACTION_FEE_IN_TOMO,
+    payload: txFee
   }
 }
 

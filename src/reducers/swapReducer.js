@@ -64,6 +64,12 @@ export default function swapReducer(state = initialState, action) {
         isDestAmountLoadingShown: action.payload
       }
     }
+    case swapActionTypes.SET_TRANSACTION_FEE_IN_TOMO: {
+      return {
+        ...state,
+        txFeeInTOMO: action.payload
+      }
+    }
     case swapActionTypes.SET_ERROR: {
       return {
         ...state,

@@ -16,6 +16,7 @@ import { getTxObject, fetchTransactionReceipt } from "./transactionSaga";
 
 const getSwapState = state => state.swap;
 const getAccountState = state => state.account;
+const getWeb3Instance = state => state.account.web3;
 
 function *swapToken() {
   const swap = yield select(getSwapState);
@@ -71,11 +72,61 @@ function *approve(action) {
   }
 }
 
-function *fetchTokenPairRateWithInterval() {
+function *forceFetchNewDataFromNode() {
   yield call(fetchTokenPairRate);
+  yield call(fetchEstimateGasUsed);
+}
+
+function *fetchEstimateGasUsedInterval() {
+  while(true) {
+    yield call(fetchEstimateGasUsed);
+    yield call(delay, appConfig.ESTIMATE_GAS_USED_INTERVAL);
+  }
+}
+
+function *fetchEstimateGasUsed() {
+  const swap = yield select(getSwapState);
+  const account = yield select(getAccountState);
+  const srcToken = swap.sourceToken;
+  const srcAmount = swap.sourceAmount ? numberToHex(swap.sourceAmount, srcToken.decimals) : "0x0";
+  const minConversionRate = calculateMinConversionRate(appConfig.DEFAULT_SLIPPAGE_RATE, swap.tokenPairRate);
+  const isSwapTOMO = srcToken.address == TOMO.address || swap.destToken.address == TOMO.address;
+  const defaultGasUsed = isSwapTOMO ? appConfig.DEFAULT_SWAP_TOMO_GAS_LIMIT : appConfig.DEFAULT_SWAP_TOKEN_GAS_LIMIT;
+
+  try {
+    const swapABI = yield call(getSwapABI, {
+      srcAddress: srcToken.address,
+      srcAmount: srcAmount,
+      destAddress: swap.destToken.address,
+      address: account.address ? account.address : "0x0",
+      maxDestAmount: getBiggestNumber(),
+      minConversionRate: minConversionRate,
+      walletId: appConfig.DEFAULT_WALLET_ID
+    });
+
+    const txObject = yield call(getTxObject, {
+      from: account.address,
+      to: envConfig.NETWORK_PROXY_ADDRESS,
+      value: srcToken.symbol === TOMO.symbol ? srcAmount : '0x0',
+      data: swapABI
+    });
+    const web3 = yield select(getWeb3Instance);
+
+    const estGasUsed = yield call(web3.eth.estimateGas, txObject);
+    const txFeeInTOMO = Math.min(defaultGasUsed, estGasUsed * 1.2) * appConfig.DEFAULT_GAS_PRICE / Math.pow(10.0, TOMO.decimals); // default
+    yield put(swapActions.setTransactionFeeInTOMO(txFeeInTOMO.toFixed(9)));
+  } catch (error) {
+    const txFeeInTOMO = defaultGasUsed * appConfig.DEFAULT_GAS_PRICE / Math.pow(10.0, TOMO.decimals); // default
+    yield put(swapActions.setTransactionFeeInTOMO(txFeeInTOMO.toFixed(9)));
+    console.log(error.message);
+  }
+}
+
+function *fetchTokenPairRateWithInterval() {
+  yield call(fetchTokenPairRate, true);
   while(true) {
     yield call(delay, appConfig.TOKEN_PAIR_RATE_INTERVAL);
-    yield call(fetchTokenPairRate, false);
+    yield call(fetchTokenPairRate);
   }
 }
 
@@ -167,9 +218,9 @@ function *setError(errorMessage) {
 export default function* swapWatcher() {
   yield takeLatest(swapActions.swapActionTypes.CHECK_SRC_TOKEN_ALLOWANCE, checkSrcTokenAllowance);
   yield takeLatest(swapActions.swapActionTypes.FETCH_TOKEN_PAIR_RATE, fetchTokenPairRateWithInterval);
-  yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_TOKEN, fetchTokenPairRate);
-  yield takeLatest(swapActions.swapActionTypes.SET_DEST_TOKEN, fetchTokenPairRate);
-  yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_AMOUNT, fetchTokenPairRate);
+  yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_TOKEN, forceFetchNewDataFromNode);
+  yield takeLatest(swapActions.swapActionTypes.SET_DEST_TOKEN, forceFetchNewDataFromNode);
+  yield takeLatest(swapActions.swapActionTypes.SET_SOURCE_AMOUNT, forceFetchNewDataFromNode);
   yield takeLatest(swapActions.swapActionTypes.SWAP_TOKEN, swapToken);
   yield takeLatest(swapActions.swapActionTypes.APPROVE, approve);
 }
