@@ -19,6 +19,7 @@ function mapStateToProps(store) {
     isAccountImported: !!account.address,
     isBalanceLoading: account.isBalanceLoading,
     web3: account.web3,
+    walletType: account.walletType,
   };
 }
 
@@ -96,6 +97,7 @@ class Transfer extends Component {
         closeTransferConfirmModal={this.closeTransferConfirmModal}
         error={this.props.error}
         addressError={this.props.addressError}
+        walletType={this.props.walletType}
       />
     )
   }

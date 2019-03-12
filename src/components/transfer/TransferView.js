@@ -55,7 +55,6 @@ export default class TransferView extends Component {
                 <div>
                   <div className={"exchange__modal-gas"}>GAS fee: * {TOMO.symbol}</div>
                 </div>
-
                 {this.props.walletType === appConfig.WALLET_TYPE_KEYSTORE && (
                   <PasswordInput/>
                 )}
